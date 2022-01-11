@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-group {
+            margin-top: 30px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="items.html" th:action="@{/members/join}" th:object="${memberJoinRequest}" method="post">
+            <div class="form-group">
+                <p style="font-size: 20px;">회원가입</p>
+            </div>
+            <div class="form-group">
+                <label th:for="email">이메일(ID)</label>
+                <input type="text" class="form-control" id="email" th:field="*{email}" />
+                <div class="field-error" th:errors="*{email}">메일 입력 오류</div>
+            </div>
+            <div class="form-group">
+                <label th:for="password">비밀번호(PW)</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}" />
+                <div class="field-error" th:errors="*{password}">비밀번호 입력 오륲</div>
+            </div>
+            <div class="form-group">
+                <label th:for="name">이름</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" />
+                <div class="field-error" th:errors="*{name}">이름 입력 오륲</div>
+            </div>
+            <div class="form-group">
+                <label th:for="phone">핸드폰번호</label>
+                <input type="text" class="form-control" id="phone" th:field="*{phone}" />
+                <div class="field-error" th:errors="*{phone}">핸드폰번호 입력 오류</div>
+            </div>
+            <div class="form-group">
+                <label th:for="nickname">닉네임</label>
+                <input type="text" class="form-control" id="nickname" th:field="*{nickname}" />
+                <div class="field-error" th:errors="*{nickname}">닉네임 입력 오류</div>
+            </div>
+            <div class="form-group">
+                <button class="w-100 btn btn-primary btn-lg" style="background-color: orange" type="submit">가입하기</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
