@@ -1,4 +1,4 @@
-package com.danggn.challenge.member.presentation.validator;
+package com.danggn.challenge.member.application.validator;
 
 import com.danggn.challenge.member.domain.repository.MemberJpaRepository;
 import com.danggn.challenge.member.presentation.request.MemberJoinRequest;

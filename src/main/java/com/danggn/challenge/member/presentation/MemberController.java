@@ -1,9 +1,9 @@
 package com.danggn.challenge.member.presentation;
 
 import com.danggn.challenge.member.application.MemberUseCase;
+import com.danggn.challenge.member.application.validator.JoinFormValidator;
 import com.danggn.challenge.member.presentation.request.LoginRequest;
 import com.danggn.challenge.member.presentation.request.MemberJoinRequest;
-import com.danggn.challenge.member.presentation.validator.JoinFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
