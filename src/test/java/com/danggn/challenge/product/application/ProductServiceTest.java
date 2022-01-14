@@ -1,6 +1,7 @@
 package com.danggn.challenge.product.application;
 
 import com.danggn.challenge.common.client.StorageClient;
+import com.danggn.challenge.common.manager.FileManager;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 import com.danggn.challenge.product.domain.Product;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
@@ -20,8 +21,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
-//    @Mock
-//    FileManager fileManager;
+    @Mock
+    FileManager fileManager;
     @Mock
     StorageClient storageClient;
     @Mock
@@ -38,10 +39,8 @@ class ProductServiceTest {
 
         // given
         CreateProductRequestVo requestVo = createMockCreateProductRequestVo();
-        when(storageClient.getUrl(requestVo.getFileNames().get(0)))
-                .thenReturn(requestVo.getFileNames().get(0));
-        when(storageClient.getUrl(requestVo.getFileNames().get(1)))
-                .thenReturn(requestVo.getFileNames().get(1));
+        fileManagerRenameStub(requestVo);
+        storageClientGetFileUrlStub(requestVo);
         List<String> mockUrls = List.of(requestVo.getFileNames().get(0),
                 requestVo.getFileNames().get(1));
         when(applicationAssembler.toProductEntity(requestVo, 1L, mockUrls))
@@ -54,10 +53,25 @@ class ProductServiceTest {
 
         // then
         assertAll(
+                () -> verify(fileManager).upload(requestVo.getFiles()),
                 () -> verify(storageClient, times(2)).getUrl(any()),
                 () -> verify(applicationAssembler).toProductEntity(requestVo, 1L, mockUrls),
                 () -> verify(productJpaRepository).save(any(Product.class))
         );
+    }
+
+    private void fileManagerRenameStub(CreateProductRequestVo requestVo) {
+        when(fileManager.upload(requestVo.getFiles()))
+                .thenReturn(List.of(
+                        requestVo.getFileNames().get(0),
+                        requestVo.getFileNames().get(1)));
+    }
+
+    private void storageClientGetFileUrlStub(CreateProductRequestVo requestVo) {
+        when(storageClient.getUrl(requestVo.getFileNames().get(0)))
+                .thenReturn(requestVo.getFileNames().get(0));
+        when(storageClient.getUrl(requestVo.getFileNames().get(1)))
+                .thenReturn(requestVo.getFileNames().get(1));
     }
 
     private CreateProductRequestVo createMockCreateProductRequestVo() {
