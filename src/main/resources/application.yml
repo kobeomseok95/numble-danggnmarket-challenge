@@ -9,3 +9,19 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(Wit9lM2OAzE+96X0PtZA3APBGpARb2JIpE2bebELGg8=)
+      secret-key: ENC(uNIf4WtYWmATl4bQzYHCWm+zbPD2IkhMCTl/i6X9rhsbuBlqu+uisynxHnErJ4N/aew6k4GDvEU=)
+    s3:
+      bucket: danggnmarket-challenge
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
