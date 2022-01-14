@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -23,10 +24,12 @@ public class CreateProductRequest {
     @Length(min = 3, max = 100, message = "상품명을 3 ~ 50자 사이로 입력해주세요.")
     private String name;
 
+    @NotBlank(message = "카테고리를 선택해주세요.")
     // TODO : presentation 계층에서 domain 계층을 보는 점이 아쉽다.
     @EnumValid(enumClass = ProductCategory.class, message = "해당 카테고리는 존재하지 않습니다.")
     private String category;
 
+    @NotNull(message = "가격을 입력해주세요.")
     @Min(value = 100, message = "가격을 100원 이상으로 입력해주세요.")
     private Long price;
 

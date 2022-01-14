@@ -24,4 +24,12 @@ public class ProductImages {
     )
     @Builder.Default
     private List<ProductImage> productImages = new ArrayList<>();
+
+    public void addAll(List<ProductImage> productImages) {
+        this.productImages.addAll(productImages);
+    }
+
+    public long getSize() {
+        return productImages.size();
+    }
 }

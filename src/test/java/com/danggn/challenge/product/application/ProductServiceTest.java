@@ -1,9 +1,11 @@
 package com.danggn.challenge.product.application;
 
 import com.danggn.challenge.common.client.StorageClient;
-import com.danggn.challenge.common.manager.FileManager;
+import com.danggn.challenge.common.manager.file.FileManager;
+import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 import com.danggn.challenge.product.domain.Product;
+import com.danggn.challenge.product.domain.ProductImage;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,30 +36,37 @@ class ProductServiceTest {
     @InjectMocks
     ProductService productService;
 
+    // TODO test
     @Test
     @DisplayName("상품 저장 / 성공")
     void save_success() throws Exception {
 
         // given
+        LoginMember loginMember = mock(LoginMember.class);
         CreateProductRequestVo requestVo = createMockCreateProductRequestVo();
         fileManagerRenameStub(requestVo);
         storageClientGetFileUrlStub(requestVo);
         List<String> mockUrls = List.of(requestVo.getFileNames().get(0),
                 requestVo.getFileNames().get(1));
-        when(applicationAssembler.toProductEntity(requestVo, 1L, mockUrls))
-                .thenReturn(createMockProduct());
+        Product product = createMockProduct();
+        when(applicationAssembler.toProductEntity(requestVo, loginMember.getMember()))
+                .thenReturn(product);
+        when(applicationAssembler.toProductImageEntity(product, mockUrls))
+                .thenReturn(createMockProductImageEntity(mockUrls));
         when(productJpaRepository.save(any(Product.class)))
-                .thenReturn(createMockProduct());
+                .thenReturn(product);
 
         // when
-        productService.save(requestVo, 1L);
+        productService.save(requestVo, loginMember);
 
         // then
         assertAll(
                 () -> verify(fileManager).upload(requestVo.getFiles()),
                 () -> verify(storageClient, times(2)).getUrl(any()),
-                () -> verify(applicationAssembler).toProductEntity(requestVo, 1L, mockUrls),
-                () -> verify(productJpaRepository).save(any(Product.class))
+                () -> verify(applicationAssembler).toProductEntity(requestVo, loginMember.getMember()),
+                () -> verify(productJpaRepository).save(any(Product.class)),
+                () -> verify(applicationAssembler).toProductImageEntity(product, mockUrls),
+                () -> assertEquals(product.getProductImages().getSize(), 2)
         );
     }
 
@@ -90,5 +100,13 @@ class ProductServiceTest {
         return Product.builder()
                 .id(1L)
                 .build();
+    }
+
+    private List<ProductImage> createMockProductImageEntity(List<String> urls) {
+        return urls.stream()
+                .map(url -> ProductImage.builder()
+                        .url(url)
+                        .build())
+                .collect(Collectors.toList());
     }
 }

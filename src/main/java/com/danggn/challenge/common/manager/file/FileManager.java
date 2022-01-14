@@ -1,4 +1,4 @@
-package com.danggn.challenge.common.manager;
+package com.danggn.challenge.common.manager.file;
 
 import org.springframework.web.multipart.MultipartFile;
 

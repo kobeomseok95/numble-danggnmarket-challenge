@@ -5,6 +5,7 @@ import com.danggn.challenge.member.domain.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,4 +38,9 @@ public class Product extends BaseEntity {
 
     @Column(length = 1000, nullable = false)
     private String mainText;
+
+    public void addProductImages(List<ProductImage> productImages) {
+        this.productImages = ProductImages.builder().build();
+        this.productImages.addAll(productImages);
+    }
 }

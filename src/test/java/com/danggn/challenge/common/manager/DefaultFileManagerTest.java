@@ -1,6 +1,7 @@
 package com.danggn.challenge.common.manager;
 
 import com.danggn.challenge.common.client.StorageClient;
+import com.danggn.challenge.common.manager.file.DefaultFileManager;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

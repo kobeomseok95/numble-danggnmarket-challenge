@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
+    <title>회원가입</title>
     <style>
         .form-group {
             margin-top: 30px;
@@ -18,7 +19,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="items.html" th:action="@{/members/join}" th:object="${memberJoinRequest}" method="post">
+        <form action="/members/join" th:action="@{/members/join}" th:object="${memberJoinRequest}" method="post">
             <div class="form-group">
                 <p style="font-size: 20px;">회원가입</p>
             </div>

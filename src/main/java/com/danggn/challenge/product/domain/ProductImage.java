@@ -18,7 +18,6 @@ public class ProductImage extends BaseEntity {
     @Column(name = "PRODUCT_IMAGE_ID")
     private Long id;
 
-    // TODO 양방향 관계에서 잘 save 되는지 확인하기
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;

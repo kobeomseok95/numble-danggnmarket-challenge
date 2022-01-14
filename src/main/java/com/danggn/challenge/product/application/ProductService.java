@@ -1,7 +1,8 @@
 package com.danggn.challenge.product.application;
 
 import com.danggn.challenge.common.client.StorageClient;
-import com.danggn.challenge.common.manager.FileManager;
+import com.danggn.challenge.common.manager.file.FileManager;
+import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 import com.danggn.challenge.product.domain.Product;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
@@ -25,13 +26,19 @@ class ProductService implements ProductUseCase {
     @Override
     public Long save(
             CreateProductRequestVo createProductRequestVo,
-            Long memberId
+            LoginMember loginMember
     ) {
         List<String> uploadedFileNames = fileManager.upload(createProductRequestVo.getFiles());
         List<String> urls = uploadedFileNames.stream()
                 .map(storageClient::getUrl)
                 .collect(Collectors.toList());
-        Product product = applicationAssembler.toProductEntity(createProductRequestVo, memberId, urls);
-        return productJpaRepository.save(product).getId();
+
+        Product product = productJpaRepository.save(
+                applicationAssembler.toProductEntity(createProductRequestVo, loginMember.getMember())
+        );
+        product.addProductImages(
+                applicationAssembler.toProductImageEntity(product, urls)
+        );
+        return product.getId();
     }
 }

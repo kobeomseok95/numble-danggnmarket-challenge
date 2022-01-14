@@ -1,6 +1,6 @@
 package com.danggn.challenge.config;
 
-import com.danggn.challenge.security.AuthMemberDetailsService;
+import com.danggn.challenge.common.security.AuthMemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(authMemberDetailsService).passwordEncoder(passwordEncoder());
     }
 
+    // TODO 로그인 시 '/products' 로 redirect
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
