@@ -33,9 +33,9 @@ class CommentService implements CommentUseCase {
 
     @Override
     public Long update(UpdateCommentRequestVo updateCommentRequestVo) {
-        Comment comment = commentJpaRepository.findById(updateCommentRequestVo.getCommentId())
+        Comment target = commentJpaRepository.findById(updateCommentRequestVo.getCommentId())
                 .orElseThrow();
-        comment.updateContents(updateCommentRequestVo.getContents());
+        target.updateContents(updateCommentRequestVo.getContents());
         return updateCommentRequestVo.getProductId();
     }
 

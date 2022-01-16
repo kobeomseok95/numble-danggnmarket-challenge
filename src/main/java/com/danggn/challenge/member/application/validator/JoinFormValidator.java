@@ -1,7 +1,7 @@
 package com.danggn.challenge.member.application.validator;
 
 import com.danggn.challenge.member.domain.repository.MemberJpaRepository;
-import com.danggn.challenge.member.presentation.request.MemberJoinRequest;
+import com.danggn.challenge.member.presentation.request.JoinMemberRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,12 +15,12 @@ public class JoinFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(MemberJoinRequest.class);
+        return clazz.isAssignableFrom(JoinMemberRequest.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        MemberJoinRequest request = (MemberJoinRequest) target;
+        JoinMemberRequest request = (JoinMemberRequest) target;
         if (memberJpaRepository.existsByEmail(request.getEmail())) {
             errors.rejectValue("email", "invalid email", "이미 존재하는 이메일입니다.");
         }

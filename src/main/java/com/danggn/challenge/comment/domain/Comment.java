@@ -30,7 +30,7 @@ public class Comment extends BaseEntity {
     @Column(length = 100, nullable = false)
     private String contents;
 
-    public void updateContents(String contents) {
-        this.contents = contents;
+    public void updateContents(String source) {
+        this.contents = source;
     }
 }

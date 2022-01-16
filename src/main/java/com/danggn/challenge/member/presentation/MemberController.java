@@ -2,8 +2,8 @@ package com.danggn.challenge.member.presentation;
 
 import com.danggn.challenge.member.application.MemberUseCase;
 import com.danggn.challenge.member.application.validator.JoinFormValidator;
+import com.danggn.challenge.member.presentation.request.JoinMemberRequest;
 import com.danggn.challenge.member.presentation.request.LoginRequest;
-import com.danggn.challenge.member.presentation.request.MemberJoinRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,20 +23,20 @@ public class MemberController {
     private final MemberPresentationAssembler presentationAssembler;
     private final JoinFormValidator joinFormValidator;
 
-    @InitBinder("memberJoinRequest")
+    @InitBinder("joinMemberRequest")
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(joinFormValidator);
     }
 
     @GetMapping("/join")
     public String joinView(Model model) {
-        model.addAttribute("memberJoinRequest", new MemberJoinRequest());
+        model.addAttribute("joinMemberRequest", new JoinMemberRequest());
         return "member/joinForm";
     }
 
     @PostMapping("/join")
     public String join(
-            @Valid @ModelAttribute("memberJoinRequest") MemberJoinRequest memberJoinRequest,
+            @Valid @ModelAttribute("joinMemberRequest") JoinMemberRequest joinMemberRequest,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
@@ -44,7 +44,7 @@ public class MemberController {
             return "member/joinForm";
         }
 
-        memberUseCase.join(presentationAssembler.toMemberJoinRequestVo(memberJoinRequest));
+        memberUseCase.join(presentationAssembler.toMemberJoinRequestVo(joinMemberRequest));
         return "redirect:/";
     }
 

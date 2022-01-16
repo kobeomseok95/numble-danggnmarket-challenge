@@ -33,4 +33,9 @@ public class Member extends BaseEntity {
     private String nickname;
 
     private String profileImageUrl;
+
+    public void updateInfo(Member source) {
+        nickname = source.getNickname();
+        profileImageUrl = source.getProfileImageUrl();
+    }
 }

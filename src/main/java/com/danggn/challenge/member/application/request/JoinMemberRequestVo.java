@@ -7,7 +7,7 @@ import lombok.Value;
 @Value
 @EqualsAndHashCode(of = {"email", "phone", "nickname"})
 @Builder
-public class MemberJoinRequestVo {
+public class JoinMemberRequestVo {
 
     private final String email;
     private final String password;

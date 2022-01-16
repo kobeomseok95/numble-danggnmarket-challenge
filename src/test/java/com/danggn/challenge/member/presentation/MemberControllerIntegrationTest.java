@@ -35,7 +35,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("joinView"))
                 .andExpect(view().name("member/joinForm"))
-                .andExpect(model().attributeExists("memberJoinRequest"));
+                .andExpect(model().attributeExists("joinMemberRequest"));
     }
 
     @Test

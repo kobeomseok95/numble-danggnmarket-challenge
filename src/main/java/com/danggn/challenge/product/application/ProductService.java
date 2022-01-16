@@ -67,12 +67,13 @@ class ProductService
     @Override
     public Long updateProductInfo(UpdateProductInfoRequestVo updateProductInfoRequestVo) {
         List<String> urls = fileManager.uploadAndReturnStoredUrl(updateProductInfoRequestVo.getFiles());
-        Product product = productJpaRepository.findWithImageUrlsById(updateProductInfoRequestVo.getProductId())
+        Product target = productJpaRepository.findWithImageUrlsById(updateProductInfoRequestVo.getProductId())
                 .orElseThrow();
-        product.updateInfo(
+        // TODO : 문제 없나? product가 바뀌기 전에 Assembler에서 매핑하는데 문제 없이 수정되는지 체크해보기
+        target.updateInfo(
                 ProductApplicationAssembler.toProductEntity(updateProductInfoRequestVo),
-                ProductApplicationAssembler.toProductImageEntity(product, urls));
-        return product.getId();
+                ProductApplicationAssembler.toProductImageEntity(target, urls));
+        return target.getId();
     }
 
     @Override
