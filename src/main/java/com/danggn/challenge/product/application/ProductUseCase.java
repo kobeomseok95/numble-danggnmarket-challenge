@@ -6,4 +6,8 @@ import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 public interface ProductUseCase {
 
     Long save(CreateProductRequestVo createProductRequestVo, LoginMember loginMember);
+
+    void like(Long productId, LoginMember loginMember);
+
+    void unlike(Long productId, LoginMember loginMember);
 }

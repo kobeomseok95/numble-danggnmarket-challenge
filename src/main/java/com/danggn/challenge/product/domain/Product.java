@@ -39,8 +39,23 @@ public class Product extends BaseEntity {
     @Column(length = 1000, nullable = false)
     private String mainText;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductTradeStatus productTradeStatus;
+
+    @Embedded
+    private Likes likes;
+
     public void addProductImages(List<ProductImage> productImages) {
         this.productImages = ProductImages.builder().build();
         this.productImages.addAll(productImages);
+    }
+
+    public void addLike(Like like) {
+        likes.add(like);
+    }
+
+    public void removeLike(Like like) {
+        likes.remove(like);
     }
 }

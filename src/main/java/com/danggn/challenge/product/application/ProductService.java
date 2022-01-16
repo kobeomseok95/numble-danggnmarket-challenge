@@ -4,6 +4,7 @@ import com.danggn.challenge.common.client.StorageClient;
 import com.danggn.challenge.common.manager.file.FileManager;
 import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
+import com.danggn.challenge.product.domain.Like;
 import com.danggn.challenge.product.domain.Product;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,25 @@ class ProductService implements ProductUseCase {
                 applicationAssembler.toProductImageEntity(product, urls)
         );
         return product.getId();
+    }
+
+    @Override
+    public void like(Long productId, LoginMember loginMember) {
+        Product product = productJpaRepository.findById(productId)
+                .orElseThrow();
+        Like like = getLikeEntity(product, loginMember);
+        product.addLike(like);
+    }
+
+    private Like getLikeEntity(Product product, LoginMember loginMember) {
+        return applicationAssembler.toLikeEntity(product, loginMember.getMember());
+    }
+
+    @Override
+    public void unlike(Long productId, LoginMember loginMember) {
+        Product product = productJpaRepository.findById(productId)
+                .orElseThrow();
+        Like like = getLikeEntity(product, loginMember);
+        product.removeLike(like);
     }
 }

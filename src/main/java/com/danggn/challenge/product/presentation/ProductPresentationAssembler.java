@@ -6,7 +6,7 @@ import com.danggn.challenge.product.presentation.request.CreateProductRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductPresentationAssembler {
+class ProductPresentationAssembler {
 
     public CreateProductRequestVo toCreateProductRequestVo(CreateProductRequest createProductRequest) {
         createProductRequest.setFiles(

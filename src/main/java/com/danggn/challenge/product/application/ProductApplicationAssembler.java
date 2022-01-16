@@ -2,16 +2,19 @@ package com.danggn.challenge.product.application;
 
 import com.danggn.challenge.member.domain.Member;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
-import com.danggn.challenge.product.domain.Product;
-import com.danggn.challenge.product.domain.ProductCategory;
-import com.danggn.challenge.product.domain.ProductImage;
+import com.danggn.challenge.product.domain.*;
+import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ProductApplicationAssembler {
+@RequiredArgsConstructor
+class ProductApplicationAssembler {
+
+    private final ProductJpaRepository productJpaRepository;
 
     public Product toProductEntity(
             CreateProductRequestVo createProductRequestVo,
@@ -23,6 +26,8 @@ public class ProductApplicationAssembler {
                 .productCategory(ProductCategory.valueOf(createProductRequestVo.getCategory()))
                 .price(createProductRequestVo.getPrice())
                 .mainText(createProductRequestVo.getMainText())
+                .productTradeStatus(ProductTradeStatus.SALE)
+                .likes(Likes.builder().build())
                 .build();
     }
 
@@ -33,5 +38,12 @@ public class ProductApplicationAssembler {
                         .url(url)
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public Like toLikeEntity(Product product, Member member) {
+        return Like.builder()
+                .product(product)
+                .member(member)
+                .build();
     }
 }

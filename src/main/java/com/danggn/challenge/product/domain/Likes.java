@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class ProductImages extends AbstractEmbeddable {
+public class Likes extends AbstractEmbeddable {
 
     @OneToMany(
             mappedBy = "product",
@@ -24,14 +24,25 @@ public class ProductImages extends AbstractEmbeddable {
             orphanRemoval = true
     )
     @Builder.Default
-    private List<ProductImage> productImages = new ArrayList<>();
+    private List<Like> values = new ArrayList<>();
 
     @Override
     public long getSize() {
-        return productImages.size();
+        return values.size();
     }
 
-    public void addAll(List<ProductImage> productImages) {
-        this.productImages.addAll(productImages);
+    public void add(Like like) {
+        if (contains(like)) {
+            throw new IllegalArgumentException("이미 좋아요 표시한 상품입니다.");
+        }
+        values.add(like);
+    }
+
+    private boolean contains(Like like) {
+        return values.stream().anyMatch(like::isEqual);
+    }
+
+    public void remove(Like like) {
+        values.removeIf(like::isEqual);
     }
 }
