@@ -10,9 +10,12 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateCommentRequest {
+public class UpdateCommentRequest {
 
-    @NotNull(message = "댓글을 작성할 상품을 선택해주세요.")
+    @NotNull(message = "수정할 댓글을 선택해주세요.")
+    private Long commentId;
+
+    @NotNull(message = "댓글을 수정할 상품을 선택해주세요.")
     private Long productId;
 
     @Length(min = 3, max = 100, message = "댓글 내용을 3 ~ 100자 사이로 입력해주세요.")

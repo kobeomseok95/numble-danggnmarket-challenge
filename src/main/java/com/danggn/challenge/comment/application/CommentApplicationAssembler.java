@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CommentApplicationAssembler {
+class CommentApplicationAssembler {
 
     private final ProductJpaRepository productJpaRepository;
 
