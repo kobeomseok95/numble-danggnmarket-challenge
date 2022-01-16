@@ -18,8 +18,6 @@ class MemberServiceTest {
 
     @Mock
     MemberJpaRepository memberJpaRepository;
-    @Mock
-    MemberApplicationAssembler memberApplicationAssembler;
 
     @InjectMocks
     MemberService memberService;
@@ -30,16 +28,13 @@ class MemberServiceTest {
 
         // given
         MemberJoinRequestVo request = createMockMemberJoinRequestVo();
-        when(memberApplicationAssembler.toMemberEntity(request))
-                .thenReturn(createMockMember());
 
         // when
         memberService.join(request);
 
         // then
         assertAll(
-                () -> verify(memberJpaRepository).save(any(Member.class)),
-                () -> verify(memberApplicationAssembler).toMemberEntity(request)
+                () -> verify(memberJpaRepository).save(any(Member.class))
         );
     }
 

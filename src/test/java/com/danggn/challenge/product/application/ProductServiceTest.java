@@ -1,10 +1,11 @@
 package com.danggn.challenge.product.application;
 
-import com.danggn.challenge.common.client.StorageClient;
 import com.danggn.challenge.common.manager.file.FileManager;
 import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.member.domain.Member;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
+import com.danggn.challenge.product.application.request.UpdateProductInfoRequestVo;
+import com.danggn.challenge.product.application.request.UpdateProductTradeStatusRequestVo;
 import com.danggn.challenge.product.domain.*;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -14,12 +15,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,11 +31,7 @@ class ProductServiceTest {
     @Mock
     FileManager fileManager;
     @Mock
-    StorageClient storageClient;
-    @Mock
     ProductJpaRepository productJpaRepository;
-    @Mock
-    ProductApplicationAssembler applicationAssembler;
 
     @InjectMocks
     ProductService productService;
@@ -44,15 +43,10 @@ class ProductServiceTest {
         // given
         LoginMember loginMember = mock(LoginMember.class);
         CreateProductRequestVo requestVo = createMockCreateProductRequestVo();
-        fileManagerRenameStub(requestVo);
-        storageClientGetFileUrlStub(requestVo);
+        fileManagerRenameStub(requestVo.getFiles(), requestVo.getFileNames());
         List<String> mockUrls = List.of(requestVo.getFileNames().get(0),
                 requestVo.getFileNames().get(1));
         Product product = createMockProduct();
-        when(applicationAssembler.toProductEntity(requestVo, loginMember.getMember()))
-                .thenReturn(product);
-        when(applicationAssembler.toProductImageEntity(product, mockUrls))
-                .thenReturn(createMockProductImageEntity(mockUrls));
         when(productJpaRepository.save(any(Product.class)))
                 .thenReturn(product);
 
@@ -61,27 +55,17 @@ class ProductServiceTest {
 
         // then
         assertAll(
-                () -> verify(fileManager).upload(requestVo.getFiles()),
-                () -> verify(storageClient, times(2)).getUrl(any()),
-                () -> verify(applicationAssembler).toProductEntity(requestVo, loginMember.getMember()),
+                () -> verify(fileManager).uploadAndReturnStoredUrl(requestVo.getFiles()),
                 () -> verify(productJpaRepository).save(any(Product.class)),
-                () -> verify(applicationAssembler).toProductImageEntity(product, mockUrls),
                 () -> assertEquals(product.getProductImages().getSize(), 2)
         );
     }
 
-    private void fileManagerRenameStub(CreateProductRequestVo requestVo) {
-        when(fileManager.upload(requestVo.getFiles()))
+    private void fileManagerRenameStub(List<MultipartFile> files, List<String> fileNames) {
+        when(fileManager.uploadAndReturnStoredUrl(files))
                 .thenReturn(List.of(
-                        requestVo.getFileNames().get(0),
-                        requestVo.getFileNames().get(1)));
-    }
-
-    private void storageClientGetFileUrlStub(CreateProductRequestVo requestVo) {
-        when(storageClient.getUrl(requestVo.getFileNames().get(0)))
-                .thenReturn(requestVo.getFileNames().get(0));
-        when(storageClient.getUrl(requestVo.getFileNames().get(1)))
-                .thenReturn(requestVo.getFileNames().get(1));
+                        fileNames.get(0),
+                        fileNames.get(1)));
     }
 
     private CreateProductRequestVo createMockCreateProductRequestVo() {
@@ -124,8 +108,6 @@ class ProductServiceTest {
                 .product(zeroLikeProduct)
                 .member(loginMember.getMember())
                 .build();
-        when(applicationAssembler.toLikeEntity(zeroLikeProduct, loginMember.getMember()))
-                .thenReturn(like);
 
         // when
         productService.like(
@@ -136,7 +118,6 @@ class ProductServiceTest {
         // then
         List<Like> likes = zeroLikeProduct.getLikes().getValues();
         assertAll(
-                () -> verify(applicationAssembler).toLikeEntity(zeroLikeProduct, loginMember.getMember()),
                 () -> assertEquals(1, likes.size())
         );
     }
@@ -148,7 +129,6 @@ class ProductServiceTest {
                 .build();
     }
 
-    // TODO 테스트 작성
     @Test
     @DisplayName("좋아요 취소 / 성공")
     void unlike_success() throws Exception {
@@ -165,8 +145,6 @@ class ProductServiceTest {
                 .build();
         when(productJpaRepository.findById(any()))
                 .thenReturn(Optional.of(oneLikeProduct));
-        when(applicationAssembler.toLikeEntity(oneLikeProduct, loginMember.getMember()))
-                .thenReturn(like);
 
         // when
         productService.unlike(oneLikeProduct.getId(), loginMember);
@@ -187,5 +165,106 @@ class ProductServiceTest {
                 .member(loginMember.getMember())
                 .build());
         return product;
+    }
+
+    @Test
+    @DisplayName("상품 상태 변경 / 예약 중 상태로 성공")
+    void updateProductStatus_success_hold() throws Exception {
+
+        // given
+        UpdateProductTradeStatusRequestVo updateRequestVo = UpdateProductTradeStatusRequestVo.builder()
+                .status("HOLD")
+                .build();
+        Product product = Product.builder()
+                .id(1L).productTradeStatus(ProductTradeStatus.SALE)
+                .build();
+        when(productJpaRepository.findById(any()))
+                .thenReturn(Optional.of(product));
+
+        // when
+        productService.updateProductStatus(updateRequestVo);
+
+        // then
+        assertAll(
+                () -> verify(productJpaRepository).findById(updateRequestVo.getProductId()),
+                () -> assertEquals(product.getProductTradeStatus(), ProductTradeStatus.HOLD)
+        );
+    }
+
+    @Test
+    @DisplayName("상품 상태 변경 / 판매완료 상태로 성공")
+    void updateProductStatus_success_soldOut() throws Exception {
+
+        // given
+        UpdateProductTradeStatusRequestVo updateRequestVo = UpdateProductTradeStatusRequestVo.builder()
+                .status("SOLD_OUT")
+                .build();
+        Product product = Product.builder()
+                .id(1L).productTradeStatus(ProductTradeStatus.SALE)
+                .build();
+        when(productJpaRepository.findById(any()))
+                .thenReturn(Optional.of(product));
+
+        // when
+        productService.updateProductStatus(updateRequestVo);
+
+        // then
+        assertAll(
+                () -> verify(productJpaRepository).findById(updateRequestVo.getProductId()),
+                () -> assertEquals(product.getProductTradeStatus(), ProductTradeStatus.SOLD_OUT)
+        );
+    }
+
+    @Test
+    @DisplayName("상품 정보 변경 / 성공")
+    void updateProductInfo_success() throws Exception {
+
+        // given
+        UpdateProductInfoRequestVo requestVo = createMockUpdateProductInfoRequestVo();
+        Product product = createMockProductWithImages();
+        fileManagerRenameStub(requestVo.getFiles(), requestVo.getFileNames());
+        when(productJpaRepository.findWithImageUrlsById(any()))
+                .thenReturn(Optional.of(product));
+
+        // when
+        Long redirectProductId = productService.updateProductInfo(requestVo);
+
+        // then
+        assertAll(
+                () -> verify(productJpaRepository).findWithImageUrlsById(requestVo.getProductId()),
+                () -> assertEquals(product.getProductImages().getValues().size(), requestVo.getFiles().size()),
+                () -> assertEquals(product.getMainText(), requestVo.getMainText()),
+                () -> assertEquals(product.getName(), requestVo.getName()),
+                () -> assertEquals(product.getPrice(), requestVo.getPrice()),
+                () -> assertEquals(product.getProductCategory().name(), requestVo.getCategory())
+        );
+    }
+
+    private UpdateProductInfoRequestVo createMockUpdateProductInfoRequestVo() {
+        return UpdateProductInfoRequestVo.builder()
+                .productId(1L)
+                .category("DIGITAL_DEVICE")
+                .name("테스트 상품")
+                .price(45_000L)
+                .mainText("테스트 텍스트 입니다.")
+                .files(List.of(
+                        new MockMultipartFile("test1.jpg", "test1.jpg".getBytes()),
+                        new MockMultipartFile("test2.jpg", "test2.jpg".getBytes())))
+                .build();
+    }
+
+    private Product createMockProductWithImages() {
+        return Product.builder()
+                .productImages(ProductImages.builder()
+                        .values(List.of(
+                                ProductImage.builder().id(1L).url("test url").build()
+                        ))
+                        .build())
+                .name("변경 전 판매상품")
+                .productCategory(ProductCategory.ETC)
+                .price(100L)
+                .mainText("변경 전 상품 상세 설명")
+                .productTradeStatus(ProductTradeStatus.SALE)
+                .build();
     }
 }

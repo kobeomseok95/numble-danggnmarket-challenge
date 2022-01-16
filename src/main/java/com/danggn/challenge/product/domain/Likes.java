@@ -20,8 +20,7 @@ public class Likes extends AbstractEmbeddable {
     @OneToMany(
             mappedBy = "product",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true
+            cascade = CascadeType.PERSIST
     )
     @Builder.Default
     private List<Like> values = new ArrayList<>();

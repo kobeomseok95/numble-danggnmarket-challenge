@@ -12,11 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 class MemberService implements MemberUseCase {
 
     private final MemberJpaRepository memberJpaRepository;
-    private final MemberApplicationAssembler applicationAssembler;
 
     public void join(MemberJoinRequestVo memberJoinRequestVo) {
         memberJpaRepository.save(
-                applicationAssembler.toMemberEntity(memberJoinRequestVo)
+                MemberApplicationAssembler.toMemberEntity(memberJoinRequestVo)
         );
     }
 }

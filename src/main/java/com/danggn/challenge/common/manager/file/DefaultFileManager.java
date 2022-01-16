@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +23,11 @@ public class DefaultFileManager implements FileManager {
     private final StorageClient storageClient;
 
     @Override
-    public List<String> upload(List<MultipartFile> files) {
-        return getUploadedRenameFileNames(files);
+    public List<String> uploadAndReturnStoredUrl(List<MultipartFile> files) {
+        List<String> uploadedRenameFileNames = getUploadedRenameFileNames(files);
+        return uploadedRenameFileNames.stream()
+                .map(storageClient::getUrl)
+                .collect(Collectors.toList());
     }
 
     private List<String> getUploadedRenameFileNames(List<MultipartFile> files) {

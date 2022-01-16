@@ -3,6 +3,7 @@ package com.danggn.challenge.product.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +24,7 @@ class ProductImagesTest {
         productImagesObject.addAll(productImages);
 
         // then
-        assertEquals(productImagesObject.getProductImages(), productImages);
+        assertEquals(productImagesObject.getValues(), productImages);
     }
 
     @Test
@@ -42,5 +43,25 @@ class ProductImagesTest {
         // then
         long size = productImagesObject.getSize();
         assertEquals(size, productImages.size());
+    }
+
+    @Test
+    @DisplayName("상품 이미지 변경 / 성공")
+    void updateProductImages_success() throws Exception {
+
+        // given
+        ProductImages productImages = ProductImages.builder()
+                .values(Collections.emptyList())
+                .build();
+        List<ProductImage> images = List.of(
+                ProductImage.builder().url("변경완료1").build(),
+                ProductImage.builder().url("변경완료2").build()
+        );
+
+        // when
+        productImages.updateProductImages(images);
+
+        // then
+        assertEquals(images.size(), productImages.getValues().size());
     }
 }

@@ -20,18 +20,21 @@ public class ProductImages extends AbstractEmbeddable {
     @OneToMany(
             mappedBy = "product",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true
+            cascade = CascadeType.PERSIST
     )
     @Builder.Default
-    private List<ProductImage> productImages = new ArrayList<>();
+    private List<ProductImage> values = new ArrayList<>();
 
     @Override
     public long getSize() {
-        return productImages.size();
+        return values.size();
     }
 
     public void addAll(List<ProductImage> productImages) {
-        this.productImages.addAll(productImages);
+        this.values.addAll(productImages);
+    }
+
+    public void updateProductImages(List<ProductImage> productImages) {
+        this.values = productImages;
     }
 }

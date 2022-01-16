@@ -5,6 +5,8 @@ import com.danggn.challenge.comment.application.request.UpdateCommentRequestVo;
 import com.danggn.challenge.comment.domain.Comment;
 import com.danggn.challenge.comment.domain.repository.CommentJpaRepository;
 import com.danggn.challenge.common.security.LoginMember;
+import com.danggn.challenge.product.domain.Product;
+import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,8 @@ class CommentServiceTest {
     CommentJpaRepository commentJpaRepository;
     @Mock
     CommentApplicationAssembler applicationAssembler;
+    @Mock
+    ProductJpaRepository productJpaRepository;
 
     @InjectMocks
     CommentService commentService;
@@ -36,9 +40,8 @@ class CommentServiceTest {
         // given
         LoginMember loginMember = mock(LoginMember.class);
         CreateCommentRequestVo requestVo = createMockCreateCommentRequestVo();
-        when(applicationAssembler.toCommentEntity(requestVo, loginMember.getMember()))
-                .thenReturn(Comment.builder().build());
-
+        when(productJpaRepository.findById(requestVo.getProductId()))
+                .thenReturn(Optional.of(Product.builder().id(requestVo.getProductId()).build()));
 
         // when
         Long redirectProductId = commentService.save(requestVo, loginMember);

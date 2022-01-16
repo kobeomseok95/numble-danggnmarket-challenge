@@ -36,7 +36,7 @@ class DefaultFileManagerTest {
         List<MultipartFile> files = createMockMultipartFiles();
 
         // when
-        List<String> uploadedFileNames = defaultFileManager.upload(files);
+        List<String> uploadedFileNames = defaultFileManager.uploadAndReturnStoredUrl(files);
 
         // then
         assertAll(

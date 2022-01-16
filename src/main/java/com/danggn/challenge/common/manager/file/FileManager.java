@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FileManager {
 
-    List<String> upload(List<MultipartFile> files);
+    List<String> uploadAndReturnStoredUrl(List<MultipartFile> files);
 }

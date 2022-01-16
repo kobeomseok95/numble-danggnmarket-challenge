@@ -1,9 +1,10 @@
 package com.danggn.challenge.product.application;
 
-import com.danggn.challenge.common.client.StorageClient;
 import com.danggn.challenge.common.manager.file.FileManager;
 import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.application.request.CreateProductRequestVo;
+import com.danggn.challenge.product.application.request.UpdateProductInfoRequestVo;
+import com.danggn.challenge.product.application.request.UpdateProductTradeStatusRequestVo;
 import com.danggn.challenge.product.domain.Like;
 import com.danggn.challenge.product.domain.Product;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
@@ -12,33 +13,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-class ProductService implements ProductUseCase {
+class ProductService
+        implements ProductUseCase,
+        ProductLikeUseCase,
+        ProductUpdateUseCase{
 
     private final FileManager fileManager;
-    private final StorageClient storageClient;
     private final ProductJpaRepository productJpaRepository;
-    private final ProductApplicationAssembler applicationAssembler;
 
     @Override
-    public Long save(
-            CreateProductRequestVo createProductRequestVo,
-            LoginMember loginMember
-    ) {
-        List<String> uploadedFileNames = fileManager.upload(createProductRequestVo.getFiles());
-        List<String> urls = uploadedFileNames.stream()
-                .map(storageClient::getUrl)
-                .collect(Collectors.toList());
-
+    public Long save(CreateProductRequestVo createProductRequestVo, LoginMember loginMember) {
+        List<String> urls = fileManager.uploadAndReturnStoredUrl(createProductRequestVo.getFiles());
         Product product = productJpaRepository.save(
-                applicationAssembler.toProductEntity(createProductRequestVo, loginMember.getMember())
+                ProductApplicationAssembler.toProductEntity(createProductRequestVo, loginMember.getMember())
         );
         product.addProductImages(
-                applicationAssembler.toProductImageEntity(product, urls)
+                ProductApplicationAssembler.toProductImageEntity(product, urls)
         );
         return product.getId();
     }
@@ -52,7 +46,7 @@ class ProductService implements ProductUseCase {
     }
 
     private Like getLikeEntity(Product product, LoginMember loginMember) {
-        return applicationAssembler.toLikeEntity(product, loginMember.getMember());
+        return ProductApplicationAssembler.toLikeEntity(product, loginMember.getMember());
     }
 
     @Override
@@ -61,5 +55,28 @@ class ProductService implements ProductUseCase {
                 .orElseThrow();
         Like like = getLikeEntity(product, loginMember);
         product.removeLike(like);
+    }
+
+    @Override
+    public void updateProductStatus(UpdateProductTradeStatusRequestVo updateProductTradeStatusRequestVo) {
+        Product product = productJpaRepository.findById(updateProductTradeStatusRequestVo.getProductId())
+                .orElseThrow();
+        product.updateStatus(updateProductTradeStatusRequestVo.getStatus());
+    }
+
+    @Override
+    public Long updateProductInfo(UpdateProductInfoRequestVo updateProductInfoRequestVo) {
+        List<String> urls = fileManager.uploadAndReturnStoredUrl(updateProductInfoRequestVo.getFiles());
+        Product product = productJpaRepository.findWithImageUrlsById(updateProductInfoRequestVo.getProductId())
+                .orElseThrow();
+        product.updateInfo(
+                ProductApplicationAssembler.toProductEntity(updateProductInfoRequestVo),
+                ProductApplicationAssembler.toProductImageEntity(product, urls));
+        return product.getId();
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        productJpaRepository.deleteById(id);
     }
 }

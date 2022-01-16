@@ -58,4 +58,16 @@ public class Product extends BaseEntity {
     public void removeLike(Like like) {
         likes.remove(like);
     }
+
+    public void updateStatus(String status) {
+        productTradeStatus = ProductTradeStatus.valueOf(status);
+    }
+
+    public void updateInfo(Product target, List<ProductImage> productImages) {
+        name = target.getName();
+        productCategory = target.getProductCategory();
+        price = target.getPrice();
+        mainText = target.getMainText();
+        this.productImages.updateProductImages(productImages);
+    }
 }

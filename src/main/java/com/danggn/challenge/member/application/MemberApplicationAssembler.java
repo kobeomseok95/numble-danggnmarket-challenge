@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 class MemberApplicationAssembler {
 
-    public Member toMemberEntity(MemberJoinRequestVo memberJoinRequestVo) {
+    static Member toMemberEntity(MemberJoinRequestVo memberJoinRequestVo) {
         return Member.builder()
                 .email(memberJoinRequestVo.getEmail())
                 .password(memberJoinRequestVo.getPassword())

@@ -4,7 +4,6 @@ import com.danggn.challenge.comment.application.request.CreateCommentRequestVo;
 import com.danggn.challenge.comment.domain.Comment;
 import com.danggn.challenge.member.domain.Member;
 import com.danggn.challenge.product.domain.Product;
-import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class CommentApplicationAssembler {
 
-    private final ProductJpaRepository productJpaRepository;
-
-    public Comment toCommentEntity(
-            CreateCommentRequestVo createCommentRequestVo,
-            Member member
-    ) {
-        Product product = productJpaRepository.findById(createCommentRequestVo.getProductId())
-                .orElseThrow();
-
+    public static Comment toCommentEntity(Product product, Member member, CreateCommentRequestVo createCommentRequestVo) {
         return Comment.builder()
                 .member(member)
                 .product(product)

@@ -75,4 +75,40 @@ public class ProductTest {
         List<Like> values = product.getLikes().getValues();
         assertEquals(0, values.size());
     }
+
+    @Test
+    @DisplayName("상품 정보 수정 / 성공")
+    void updateInfoTest_success() throws Exception {
+
+        // given
+        Product beforeUpdateProduct = Product.builder()
+                .productImages(ProductImages.builder()
+                        .values(List.of(ProductImage.builder()
+                                .url("변경 전")
+                                .build()))
+                        .build())
+                .build();
+        Product wantUpdateProduct = Product.builder()
+                .name("변경")
+                .productCategory(ProductCategory.ETC)
+                .price(100_000L)
+                .mainText("변경")
+                .build();
+        List<ProductImage> images = List.of(
+                ProductImage.builder().url("변경완료1").build(),
+                ProductImage.builder().url("변경완료2").build()
+        );
+
+        // when
+        beforeUpdateProduct.updateInfo(wantUpdateProduct, images);
+
+        // then
+        assertAll(
+                () -> assertEquals(wantUpdateProduct.getName(), beforeUpdateProduct.getName()),
+                () -> assertEquals(wantUpdateProduct.getProductCategory(), beforeUpdateProduct.getProductCategory()),
+                () -> assertEquals(wantUpdateProduct.getPrice(), beforeUpdateProduct.getPrice()),
+                () -> assertEquals(wantUpdateProduct.getMainText(), beforeUpdateProduct.getMainText()),
+                () -> assertEquals(images.size(), beforeUpdateProduct.getProductImages().getValues().size())
+        );
+    }
 }
