@@ -33,4 +33,8 @@ public class Comment extends BaseEntity {
     public void updateContents(String source) {
         this.contents = source;
     }
+
+    public void subCommentCount() {
+        product.subCommentsCount();
+    }
 }

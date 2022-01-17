@@ -1,4 +1,4 @@
-package com.danggn.challenge.product.application;
+package com.danggn.challenge.product.application.usecase;
 
 import com.danggn.challenge.common.security.LoginMember;
 

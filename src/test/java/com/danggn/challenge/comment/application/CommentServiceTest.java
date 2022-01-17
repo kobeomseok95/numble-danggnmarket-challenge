@@ -26,8 +26,6 @@ class CommentServiceTest {
     @Mock
     CommentJpaRepository commentJpaRepository;
     @Mock
-    CommentApplicationAssembler applicationAssembler;
-    @Mock
     ProductJpaRepository productJpaRepository;
 
     @InjectMocks
@@ -40,15 +38,17 @@ class CommentServiceTest {
         // given
         LoginMember loginMember = mock(LoginMember.class);
         CreateCommentRequestVo requestVo = createMockCreateCommentRequestVo();
+        Product product = Product.builder().id(requestVo.getProductId()).build();
         when(productJpaRepository.findById(requestVo.getProductId()))
-                .thenReturn(Optional.of(Product.builder().id(requestVo.getProductId()).build()));
+                .thenReturn(Optional.of(product));
 
         // when
         Long redirectProductId = commentService.save(requestVo, loginMember);
 
         // then
         assertAll(
-                () -> verify(commentJpaRepository).save(any(Comment.class))
+                () -> verify(commentJpaRepository).save(any(Comment.class)),
+                () -> assertEquals(1, product.getCommentsCount())
         );
     }
 
@@ -94,10 +94,23 @@ class CommentServiceTest {
     @DisplayName("댓글 삭제 / 성공")
     void delete_success() throws Exception {
 
-        // given, when
+        // given
+        Comment comment = Comment.builder()
+                .id(1L)
+                .product(Product.builder()
+                        .commentsCount(1)
+                        .build())
+                .build();
+        when(commentJpaRepository.findWithProductById(any()))
+                .thenReturn(Optional.of(comment));
+
+        // when
         commentService.delete(1L);
 
         // then
-        verify(commentJpaRepository).deleteById(1L);
+        assertAll(
+                () -> verify(commentJpaRepository).delete(comment),
+                () -> assertEquals(0, comment.getProduct().getCommentsCount())
+        );
     }
 }

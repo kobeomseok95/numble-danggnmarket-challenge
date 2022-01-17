@@ -1,9 +1,13 @@
-package com.danggn.challenge.product.application;
+package com.danggn.challenge.product.application.usecase;
 
+import com.danggn.challenge.common.security.LoginMember;
+import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 import com.danggn.challenge.product.application.request.UpdateProductInfoRequestVo;
 import com.danggn.challenge.product.application.request.UpdateProductTradeStatusRequestVo;
 
-public interface ProductUpdateUseCase {
+public interface ProductCommandUseCase {
+
+    Long save(CreateProductRequestVo createProductRequestVo, LoginMember loginMember);
 
     void updateProductStatus(UpdateProductTradeStatusRequestVo updateProductTradeStatusRequestVo);
 

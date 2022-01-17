@@ -8,6 +8,7 @@ import com.danggn.challenge.product.application.request.UpdateProductInfoRequest
 import com.danggn.challenge.product.application.request.UpdateProductTradeStatusRequestVo;
 import com.danggn.challenge.product.domain.*;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
+import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,12 +22,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductCommandServiceTest {
 
     @Mock
     FileManager fileManager;
@@ -34,7 +34,7 @@ class ProductServiceTest {
     ProductJpaRepository productJpaRepository;
 
     @InjectMocks
-    ProductService productService;
+    ProductCommandService productCommandService;
 
     @Test
     @DisplayName("상품 저장 / 성공")
@@ -44,20 +44,17 @@ class ProductServiceTest {
         LoginMember loginMember = mock(LoginMember.class);
         CreateProductRequestVo requestVo = createMockCreateProductRequestVo();
         fileManagerRenameStub(requestVo.getFiles(), requestVo.getFileNames());
-        List<String> mockUrls = List.of(requestVo.getFileNames().get(0),
-                requestVo.getFileNames().get(1));
         Product product = createMockProduct();
         when(productJpaRepository.save(any(Product.class)))
                 .thenReturn(product);
 
         // when
-        productService.save(requestVo, loginMember);
+        productCommandService.save(requestVo, loginMember);
 
         // then
         assertAll(
                 () -> verify(fileManager).uploadAndReturnStoredUrl(requestVo.getFiles()),
-                () -> verify(productJpaRepository).save(any(Product.class)),
-                () -> assertEquals(product.getProductImages().getSize(), 2)
+                () -> verify(productJpaRepository).save(any(Product.class))
         );
     }
 
@@ -71,8 +68,8 @@ class ProductServiceTest {
     private CreateProductRequestVo createMockCreateProductRequestVo() {
         return CreateProductRequestVo.builder()
                 .files(List.of(
-                        new MockMultipartFile("test1.jpg", "test1.jpg".getBytes()),
-                        new MockMultipartFile("test2.jpg", "test2.jpg".getBytes())))
+                        new MockMultipartFile("test1.jpg", "test1.jpg", ContentType.IMAGE_JPEG.getMimeType(), "test1.jpg".getBytes()),
+                        new MockMultipartFile("test2.jpg", "test2.jpg", ContentType.IMAGE_JPEG.getMimeType(), "test2.jpg".getBytes())))
                 .name("테스트 판매 상품")
                 .category("GAME_HOBBY")
                 .price(10_000L)
@@ -110,7 +107,7 @@ class ProductServiceTest {
                 .build();
 
         // when
-        productService.like(
+        productCommandService.like(
                 zeroLikeProduct.getId(),
                 loginMember
         );
@@ -147,7 +144,7 @@ class ProductServiceTest {
                 .thenReturn(Optional.of(oneLikeProduct));
 
         // when
-        productService.unlike(oneLikeProduct.getId(), loginMember);
+        productCommandService.unlike(oneLikeProduct.getId(), loginMember);
 
         // then
         List<Like> likes = oneLikeProduct.getLikes().getValues();
@@ -182,7 +179,7 @@ class ProductServiceTest {
                 .thenReturn(Optional.of(product));
 
         // when
-        productService.updateProductStatus(updateRequestVo);
+        productCommandService.updateProductStatus(updateRequestVo);
 
         // then
         assertAll(
@@ -206,7 +203,7 @@ class ProductServiceTest {
                 .thenReturn(Optional.of(product));
 
         // when
-        productService.updateProductStatus(updateRequestVo);
+        productCommandService.updateProductStatus(updateRequestVo);
 
         // then
         assertAll(
@@ -223,15 +220,15 @@ class ProductServiceTest {
         UpdateProductInfoRequestVo requestVo = createMockUpdateProductInfoRequestVo();
         Product product = createMockProductWithImages();
         fileManagerRenameStub(requestVo.getFiles(), requestVo.getFileNames());
-        when(productJpaRepository.findWithImageUrlsById(any()))
+        when(productJpaRepository.findById(any()))
                 .thenReturn(Optional.of(product));
 
         // when
-        Long redirectProductId = productService.updateProductInfo(requestVo);
+        Long redirectProductId = productCommandService.updateProductInfo(requestVo);
 
         // then
         assertAll(
-                () -> verify(productJpaRepository).findWithImageUrlsById(requestVo.getProductId()),
+                () -> verify(productJpaRepository).findById(requestVo.getProductId()),
                 () -> assertEquals(product.getProductImages().getValues().size(), requestVo.getFiles().size()),
                 () -> assertEquals(product.getMainText(), requestVo.getMainText()),
                 () -> assertEquals(product.getName(), requestVo.getName()),

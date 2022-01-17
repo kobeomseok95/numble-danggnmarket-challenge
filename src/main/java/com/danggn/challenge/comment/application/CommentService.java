@@ -24,6 +24,7 @@ class CommentService implements CommentUseCase {
         Product product = productJpaRepository.findById(createCommentRequestVo.getProductId())
                 .orElseThrow();
 
+        product.addCommentsCount();
         Comment comment = CommentApplicationAssembler.toCommentEntity(
                 product, loginMember.getMember(), createCommentRequestVo
         );
@@ -41,6 +42,9 @@ class CommentService implements CommentUseCase {
 
     @Override
     public void delete(Long commentId) {
-        commentJpaRepository.deleteById(commentId);
+        Comment comment = commentJpaRepository.findWithProductById(commentId)
+                .orElseThrow();
+        comment.subCommentCount();
+        commentJpaRepository.delete(comment);
     }
 }

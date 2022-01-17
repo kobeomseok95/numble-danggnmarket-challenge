@@ -46,6 +46,12 @@ public class Product extends BaseEntity {
     @Embedded
     private Likes likes;
 
+    private int likesCount;
+
+    private int commentsCount;
+
+    private String thumbnailImageUrl;
+
     public void addProductImages(List<ProductImage> productImages) {
         this.productImages = ProductImages.builder().build();
         this.productImages.addAll(productImages);
@@ -53,10 +59,12 @@ public class Product extends BaseEntity {
 
     public void addLike(Like like) {
         likes.add(like);
+        likesCount++;
     }
 
     public void removeLike(Like like) {
         likes.remove(like);
+        likesCount--;
     }
 
     public void updateStatus(String status) {
@@ -69,5 +77,13 @@ public class Product extends BaseEntity {
         price = source.getPrice();
         mainText = source.getMainText();
         this.productImages.updateProductImages(sourceImages);
+    }
+
+    public void addCommentsCount() {
+        commentsCount++;
+    }
+
+    public void subCommentsCount() {
+        commentsCount--;
     }
 }

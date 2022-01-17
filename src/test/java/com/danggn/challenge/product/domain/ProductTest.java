@@ -48,7 +48,8 @@ public class ProductTest {
         List<Like> values = product.getLikes().getValues();
         assertAll(
                 () -> assertEquals(1, values.size()),
-                () -> assertEquals(like, values.get(0))
+                () -> assertEquals(like, values.get(0)),
+                () -> assertEquals(1, product.getLikesCount())
         );
     }
 
@@ -60,6 +61,7 @@ public class ProductTest {
         Product product = Product.builder()
                 .id(1L)
                 .likes(Likes.builder().build())
+                .likesCount(1)
                 .build();
         Member member = Member.builder().id(1L).build();
         Like like = Like.builder()
@@ -73,7 +75,10 @@ public class ProductTest {
 
         // then
         List<Like> values = product.getLikes().getValues();
-        assertEquals(0, values.size());
+        assertAll(
+                () -> assertEquals(0, values.size()),
+                () -> assertEquals(0, product.getLikesCount())
+        );
     }
 
     @Test

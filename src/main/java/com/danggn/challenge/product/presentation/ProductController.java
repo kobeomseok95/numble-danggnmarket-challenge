@@ -3,7 +3,7 @@ package com.danggn.challenge.product.presentation;
 import com.danggn.challenge.common.security.AuthUser;
 import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.application.ProductCategoryProvider;
-import com.danggn.challenge.product.application.ProductUseCase;
+import com.danggn.challenge.product.application.usecase.ProductCommandUseCase;
 import com.danggn.challenge.product.presentation.request.CreateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductUseCase productUseCase;
+    private final ProductCommandUseCase productCommandUseCase;
     private final ProductCategoryProvider productCategoryProvider;
     private final ProductPresentationAssembler presentationAssembler;
 
@@ -61,7 +61,7 @@ public class ProductController {
             return "/product/addForm";
         }
 
-        Long productId = productUseCase.save(
+        Long productId = productCommandUseCase.save(
                 presentationAssembler.toCreateProductRequestVo(createProductRequest),
                 loginMember
         );
