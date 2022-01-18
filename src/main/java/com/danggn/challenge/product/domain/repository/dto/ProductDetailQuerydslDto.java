@@ -1,4 +1,4 @@
-package com.danggn.challenge.product.domain.repository.vo;
+package com.danggn.challenge.product.domain.repository.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
@@ -14,6 +14,7 @@ public class ProductDetailQuerydslDto {
 
     private List<String> imageUrls;
     private Long memberId;
+    private String memberProfileUrl;
     private Long productId;
     private String memberNickname;
     private String productName;
@@ -24,9 +25,10 @@ public class ProductDetailQuerydslDto {
     private List<MemberSaleProductsQuerydslDto> memberSaleProducts;
 
     @QueryProjection
-    public ProductDetailQuerydslDto(List<String> imageUrls, Long memberId, Long productId, String memberNickname, String productName, Long price, String category, LocalDateTime createdDate, String contents) {
+    public ProductDetailQuerydslDto(List<String> imageUrls, Long memberId, String memberProfileUrl, Long productId, String memberNickname, String productName, Long price, String category, LocalDateTime createdDate, String contents) {
         this.imageUrls = imageUrls;
         this.memberId = memberId;
+        this.memberProfileUrl = memberProfileUrl;
         this.productId = productId;
         this.memberNickname = memberNickname;
         this.productName = productName;

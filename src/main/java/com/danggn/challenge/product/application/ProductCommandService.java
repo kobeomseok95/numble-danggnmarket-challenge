@@ -32,7 +32,7 @@ class ProductCommandService
         Product product = productJpaRepository.save(
                 ProductApplicationAssembler.toProductEntity(createProductRequestVo,
                         loginMember.getMember(),
-                        urls.get(0)));
+                        urls));
         product.addProductImages(
                 ProductApplicationAssembler.toProductImageEntity(product, urls)
         );

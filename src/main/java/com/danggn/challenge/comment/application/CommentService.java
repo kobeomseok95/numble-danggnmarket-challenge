@@ -2,8 +2,10 @@ package com.danggn.challenge.comment.application;
 
 import com.danggn.challenge.comment.application.request.CreateCommentRequestVo;
 import com.danggn.challenge.comment.application.request.UpdateCommentRequestVo;
+import com.danggn.challenge.comment.application.response.CommentsResponseVo;
 import com.danggn.challenge.comment.domain.Comment;
 import com.danggn.challenge.comment.domain.repository.CommentJpaRepository;
+import com.danggn.challenge.comment.domain.repository.CommentQuerydslRepository;
 import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.domain.Product;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
@@ -18,6 +20,7 @@ class CommentService implements CommentUseCase {
 
     private final ProductJpaRepository productJpaRepository;
     private final CommentJpaRepository commentJpaRepository;
+    private final CommentQuerydslRepository commentQuerydslRepository;
 
     @Override
     public Long save(CreateCommentRequestVo createCommentRequestVo, LoginMember loginMember) {
@@ -46,5 +49,13 @@ class CommentService implements CommentUseCase {
                 .orElseThrow();
         comment.subCommentCount();
         commentJpaRepository.delete(comment);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public CommentsResponseVo getProductComments(Long productId) {
+        return CommentApplicationAssembler
+                .toCommentsResponseVo(commentQuerydslRepository.findCommentsByProductId(productId)
+                .orElseThrow());
     }
 }

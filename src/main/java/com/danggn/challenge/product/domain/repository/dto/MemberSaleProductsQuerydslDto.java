@@ -1,4 +1,4 @@
-package com.danggn.challenge.product.domain.repository.vo;
+package com.danggn.challenge.product.domain.repository.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;

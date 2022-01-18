@@ -25,7 +25,7 @@ public class CreateProductRequest {
     private String name;
 
     @NotBlank(message = "카테고리를 선택해주세요.")
-    // TODO : presentation 계층에서 domain 계층을 보는 점이 아쉽다.
+
     @EnumValid(enumClass = ProductCategory.class, message = "해당 카테고리는 존재하지 않습니다.")
     private String category;
 

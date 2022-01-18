@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>상품 상세</title>
+    <style>
+        .product-images {
+            margin-bottom: 75px;
+        }
+        .product-image {
+            width: 150px;
+            height: 150px;
+        }
+        .seller-profile-image {
+            width: 30px;
+            height: 30px;
+        }
+        .members-nickname {
+            margin-right: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" th:object="${product}">
+        <div class="product-images" th:each="url : ${product.imageUrls}">
+            <img class="product-image" th:src="${url}" />
+        </div>
+        <div class="product-info">
+            <input type="hidden" id="memberId" th:value="${product.memberId}"/>
+            <input type="hidden" id="productId" th:value="${product.productId}"/>
+            <img class="seller-profile-image" th:if="${#strings.isEmpty(product.memberProfileUrl)}" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5330614c-8946-4d89-88d8-b872048bc502%2Fuser_(3).png&blockId=d0a7e8b4-223f-4ff1-8bb7-b1a87556682a&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDc5OTU5LCJleHAiOjE2NDI0OTA3NTl9.Xvok4HBcTc3IkvryZReYSoyntBXmEBEJzAn23QUx3MI"/>
+            <img class="seller-profile-image" th:unless="${#strings.isEmpty(product.memberProfileUrl)}" th:src="${product.memberProfileUrl}"/>
+            <span th:text="${product.memberNickname}">닉네임</span>
+            <hr/>
+            <p th:text="${product.productName}">제목</p>
+            <p th:text="${product.price}">가격</p>
+            <p th:text="${product.category}">카테고리</p>
+            <p th:text="${product.createdDate}">게시 시간</p>
+            <p th:text="${product.contents}">본문</p>
+            <hr/>
+        </div>
+        <div class="sellers-products">
+            <span class="members-nickname" th:text="|${product.memberNickname} 님의 판매 상품|">닉네임님의 판매상품</span>
+            <a href="/products" th:href="@{/products/member/{memberId}(memberId=${product.memberId})}">모두 보기</a>
+            <div th:each="salesProduct : ${product.memberSaleProducts}">
+                <a th:href="@{/products/{productId}(productId=${product.productId})}">
+                    <img class="product-image" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa1244cac-6e0f-4f89-8028-fb920433d066%2Fcarrot.png&blockId=57b0556c-a1f9-4b11-83b7-75bf593fa482&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDc5OTU5LCJleHAiOjE2NDI0OTA3NTl9.Xvok4HBcTc3IkvryZReYSoyntBXmEBEJzAn23QUx3MI" th:src="${salesProduct.thumbnailUrl}"/>
+                    <p th:text="${salesProduct.productName}">제목</p>
+                    <p th:text="${salesProduct.price}">가격</p>
+                </a>
+            </div>
+        </div>
+        <div align="center">
+            <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments(productId=${product.productId})}">댓글 보기</a>
+            <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments/add(productId=${product.productId})}">댓글 남기기</a>
+        </div>
+    </div>
+</body>
+</html>

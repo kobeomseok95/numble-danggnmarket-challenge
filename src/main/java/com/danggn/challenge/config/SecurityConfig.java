@@ -45,7 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(authMemberDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    // TODO 로그인 시 '/products' 로 redirect
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -60,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/members/login")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/products")
                 .failureUrl("/members/login?error")
                 .permitAll()
                 .and()

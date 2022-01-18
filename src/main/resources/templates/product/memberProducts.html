@@ -32,7 +32,13 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" th:value="${memberId}">
+    <div class="row" style="margin-bottom: 20px;">
+      <div align="center" class="col"><a th:href="@{/products/member/{memberId}(memberId=${memberId},status='ALL')}">전체상품</a></div>
+      <div align="center" class="col"><a th:href="@{/products/member/{memberId}(memberId=${memberId},status='SALE')}">판매중</a></div>
+      <div align="center" class="col"><a th:href="@{/products/member/{memberId}(memberId=${memberId},status='SOLD_OUT')}">판매완료</a></div>
+    </div>
+    <hr/>
     <div class="products-div" th:each="product : ${products}">
       <a th:href="@{/products/{productId}(productId=${product.productId})}">
         <img class="product-img" th:src="${product.thumbnailImageUrl}" />
@@ -48,10 +54,7 @@
       </a>
     </div>
     <div class="start-button-div" align="center" th:if="${products.hasNext()}">
-      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">더보기</a>
-    </div>
-    <div class="start-button-div" align="center">
-      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products/add}">상품 등록</a>
+      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">뒤로가기</a>
     </div>
   </div>
 </body>

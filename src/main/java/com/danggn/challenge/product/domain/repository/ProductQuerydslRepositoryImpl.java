@@ -1,13 +1,12 @@
 package com.danggn.challenge.product.domain.repository;
 
-import com.danggn.challenge.common.util.QuerydslUtil;
-import com.danggn.challenge.product.domain.repository.vo.*;
+import com.danggn.challenge.product.domain.ProductTradeStatus;
+import com.danggn.challenge.product.domain.repository.dto.*;
 import com.querydsl.core.group.GroupBy;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,22 +26,20 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<ProductsQuerydslDto> findProducts(Pageable pageable) {
-        List<ProductsQuerydslDto> contents = queryFactory
+    public List<ProductsQuerydslDto> findProducts(Pageable pageable) {
+        return queryFactory
                 .select(getProductsQuery())
                 .from(product)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(product.lastModifiedDate.desc())
                 .fetch();
-
-        boolean hasNext = QuerydslUtil.hasNextContents(contents, pageable.getPageSize());
-        return new SliceImpl<>(contents, pageable, hasNext);
     }
 
     private QProductsQuerydslDto getProductsQuery() {
         return new QProductsQuerydslDto(
                 product.id,
+                product.member.id,
                 product.thumbnailImageUrl,
                 product.name,
                 product.productTradeStatus.stringValue(),
@@ -54,7 +51,7 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
     @Override
     public Optional<ProductDetailQuerydslDto> findProductDetail(Long productId) {
         Map<Long, ProductDetailQuerydslDto> transformMap = findProductDetailQuery(productId);
-        if (!QuerydslUtil.containsKey(transformMap, productId)) {
+        if (!transformMap.containsKey(productId)) {
             return Optional.empty();
         }
 
@@ -77,11 +74,12 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
         return queryFactory
                 .from(product)
                 .join(product.member, member)
-                .join(product.productImages.values, productImage)
+                .leftJoin(product.productImages.values, productImage)
                 .where(product.id.eq(productId))
                 .transform(groupBy(product.id).as(new QProductDetailQuerydslDto(
                         GroupBy.list(productImage.url),
                         member.id,
+                        member.profileImageUrl,
                         product.id,
                         member.nickname,
                         product.name,
@@ -93,8 +91,8 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
     }
 
     @Override
-    public Slice<ProductsQuerydslDto> findLikeProducts(Long memberId, Pageable pageable) {
-        List<ProductsQuerydslDto> contents = queryFactory
+    public List<ProductsQuerydslDto> findLikeProducts(Long memberId, Pageable pageable) {
+        return queryFactory
                 .select(getProductsQuery())
                 .from(like)
                 .join(like.product, product)
@@ -103,24 +101,30 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(like.createdDate.desc())
                 .fetch();
-
-        boolean hasNext = QuerydslUtil.hasNextContents(contents, pageable.getPageSize());
-        return new SliceImpl<>(contents, pageable, hasNext);
     }
 
     @Override
-    public Slice<ProductsQuerydslDto> findByMemberId(Long memberId, Pageable pageable) {
-        List<ProductsQuerydslDto> contents = queryFactory
+    public List<ProductsQuerydslDto> findByMemberIdStatus(Long memberId, String productStatusName, Pageable pageable) {
+        return queryFactory
                 .select(getProductsQuery())
                 .from(product)
-                .where(product.member.id.eq(memberId))
+                .where(product.member.id.eq(memberId)
+                        .and(getStatus(productStatusName)))
                 .groupBy(product.id)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(product.lastModifiedDate.desc())
                 .fetch();
+    }
 
-        boolean hasNext = QuerydslUtil.hasNextContents(contents, pageable.getPageSize());
-        return new SliceImpl<>(contents, pageable, hasNext);
+    private BooleanExpression getStatus(String productStatusName) {
+        switch (productStatusName) {
+            case "SALE":
+                return product.productTradeStatus.eq(ProductTradeStatus.SALE);
+            case "SOLD_OUT":
+                return product.productTradeStatus.eq(ProductTradeStatus.SOLD_OUT);
+            default:
+                return null;
+        }
     }
 }

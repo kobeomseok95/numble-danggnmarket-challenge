@@ -1,19 +1,19 @@
 package com.danggn.challenge.product.domain.repository;
 
-import com.danggn.challenge.product.domain.repository.vo.ProductsQuerydslDto;
-import com.danggn.challenge.product.domain.repository.vo.ProductDetailQuerydslDto;
+import com.danggn.challenge.product.domain.repository.dto.ProductDetailQuerydslDto;
+import com.danggn.challenge.product.domain.repository.dto.ProductsQuerydslDto;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductQuerydslRepository {
 
-    Slice<ProductsQuerydslDto> findProducts(Pageable pageable);
+    List<ProductsQuerydslDto> findProducts(Pageable pageable);
 
     Optional<ProductDetailQuerydslDto> findProductDetail(Long productId);
 
-    Slice<ProductsQuerydslDto> findLikeProducts(Long memberId, Pageable pageable);
+    List<ProductsQuerydslDto> findLikeProducts(Long memberId, Pageable pageable);
 
-    Slice<ProductsQuerydslDto> findByMemberId(Long memberId, Pageable pageable);
+    List<ProductsQuerydslDto> findByMemberIdStatus(Long memberId, String productStatusName, Pageable pageable);
 }

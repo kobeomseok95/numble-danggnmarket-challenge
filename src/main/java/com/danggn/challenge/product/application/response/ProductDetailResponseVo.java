@@ -15,6 +15,7 @@ public class ProductDetailResponseVo {
 
     private final List<String> imageUrls;
     private final Long memberId;
+    private final String memberProfileUrl;
     private final Long productId;
     private final String memberNickname;
     private final String productName;
