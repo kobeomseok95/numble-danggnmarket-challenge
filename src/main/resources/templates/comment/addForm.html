@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+  <title>상품</title>
+  <style>
+    .btn {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-top: 30px;
+    }
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form th:action="@{/comments/add}" th:object="${createCommentRequest}" method="post">
+      <div class="form-group">
+        <input type="hidden" id="productId" th:field="*{productId}" th:value="${createCommentRequest.productId}"/>
+        <label th:for="contents"></label>
+        <textarea type="text" class="form-control" id="contents" th:field="*{contents}" placeholder="댓글을 남겨주세요. 언제 어디서 물건을 받을 수 있는지 문의하시거나 제안해보세요.(100자 이내)">
+        </textarea>
+        <div class="field-error" th:errors="*{contents}">댓글을 확인해주세요.</div>
+      </div>
+      <div class="start-button-div" align="center">
+        <button class="btn btn-lg" style="background-color: orange; color: white;" type="submit">등록하기</button>
+      </div>
+    </form>
+    <div class="start-button-div" align="center">
+      <a class="btn btn-lg" style="background-color: orange; color: white" href="javascript:window.history.back()">뒤로가기</a>
+    </div>
+  </div>
+</body>
+</html>

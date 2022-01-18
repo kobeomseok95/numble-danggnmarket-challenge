@@ -17,13 +17,14 @@ public class CommentsResponseVo {
     private final String productTradeStatus;
     private final Long price;
     @Builder.Default
-    private final List<CommentDto> comments = new ArrayList<>();
+    private final List<CommentVo> comments = new ArrayList<>();
 
     @Value
     @Builder
-    public static class CommentDto {
+    public static class CommentVo {
 
         private final Long memberId;
+        private final String memberNickname;
         private final String memberProfileUrl;
         private final LocalDateTime createdDate;
         private final String contents;

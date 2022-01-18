@@ -5,9 +5,9 @@ import com.danggn.challenge.comment.presentation.request.CreateCommentRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentPresentationAssembler {
+class CommentPresentationAssembler {
 
-    public CreateCommentRequestVo toCreateCommentRequestVo(CreateCommentRequest request) {
+    static CreateCommentRequestVo toCreateCommentRequestVo(CreateCommentRequest request) {
         return CreateCommentRequestVo.builder()
                 .productId(request.getProductId())
                 .contents(request.getContents())

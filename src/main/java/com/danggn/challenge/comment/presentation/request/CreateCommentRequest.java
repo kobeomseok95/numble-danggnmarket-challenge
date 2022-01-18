@@ -17,4 +17,8 @@ public class CreateCommentRequest {
 
     @Length(min = 3, max = 100, message = "댓글 내용을 3 ~ 100자 사이로 입력해주세요.")
     private String contents;
+
+    public CreateCommentRequest(Long productId) {
+        this.productId = productId;
+    }
 }

@@ -20,32 +20,50 @@
     .products-div {
       margin-bottom: 50px;
     }
-    .product-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
+    .comments-div {
+      margin-bottom: 50px;
+    }
+    .member-profile-img {
+      width: 100px;
+      height: 100px;
+    }
+    textarea {
+      width: 500px;
+      height: 55px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="products-div" th:each="product : ${products}">
-      <a th:href="@{/products/{productId}(productId=${product.productId})}">
-        <img class="product-img" th:src="${product.thumbnailImageUrl}" />
+    <div class="row">
+      <div class="products-div" th:object="${comments}">
+        <img class="product-img" th:src="${comments.thumbnailImageUrl}" />
         <div class="product-info-div">
-          <p th:text="${product.productName}">상품명</p>
+          <p th:text="${comments.productName}">상품명</p>
           <p>장소</p>
-          <p th:text="${product.price}">가격</p>
-          <p th:text="${product.likeCount}"><img class="product-icon" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F94fd7095-087d-4a62-ace8-720d1f6632b3%2Fheart.png&blockId=fa7d6c36-c889-464d-b0d2-0daac59c99cf&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDcyMDI5LCJleHAiOjE2NDI0ODI4Mjl9.a6jZGW6I5WX_AvAPYN_K9twZsn1cx7iWQj2lGTsJJWI">좋아요 수</p>
-          <p th:text="${product.commentCount}"><img class="product-icon" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F4068ae08-1762-4492-9b67-30f9f913a866%2Fconversation.png&blockId=8f072fab-30ea-425b-890c-f7d107fceee8&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDcyMDI5LCJleHAiOjE2NDI0ODI4Mjl9.a6jZGW6I5WX_AvAPYN_K9twZsn1cx7iWQj2lGTsJJWI"/>댓글 수</p>
+          <p th:text="${comments.price}">가격</p>
         </div>
-      </a>
+      </div>
     </div>
-    <div class="start-button-div" align="center" th:if="${products.hasNext()}">
-      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">더보기</a>
+    <div class="row">
+      <div class="comments-div" th:each="comment : ${comments.comments}">
+        <div class="row">
+          <div class="col-xs-3">
+            <img class="member-profile-img" th:src="${comment.memberProfileUrl}"/>
+            <span th:text="${comment.memberNickname}">닉네임</span>
+            <span th:text="${comment.createdDate}">시간</span>
+            <div>
+              <textarea th:text="${comment.contents}" disabled>댓글 내용</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="start-button-div" align="center">
-      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products/add}">상품 등록</a>
+      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments/add(productId=${comments.productId})}">댓글 남기기</a>
+    </div>
+    <div class="start-button-div" align="center">
+      <a class="btn btn-lg" style="background-color: orange; color: white" href="javascript:window.history.back()">뒤로가기</a>
     </div>
   </div>
 </body>

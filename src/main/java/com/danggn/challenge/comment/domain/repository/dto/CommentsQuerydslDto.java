@@ -13,7 +13,6 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 public class CommentsQuerydslDto {
 
     private Long productId;
@@ -21,16 +20,19 @@ public class CommentsQuerydslDto {
     private String productName;
     private String productTradeStatus;
     private Long price;
-    @Builder.Default
-    private List<CommentDto> comments = new ArrayList<>();
+    private List<CommentDto> comments;
 
     @QueryProjection
-    public CommentsQuerydslDto(Long productId, String thumbnailImageUrl, String productName, String productTradeStatus, Long price, List<CommentDto> comments) {
+    public CommentsQuerydslDto(Long productId, String thumbnailImageUrl, String productName, String productTradeStatus, Long price) {
         this.productId = productId;
         this.thumbnailImageUrl = thumbnailImageUrl;
         this.productName = productName;
         this.productTradeStatus = productTradeStatus;
         this.price = price;
+        this.comments = new ArrayList<>();
+    }
+
+    public void setComments(List<CommentDto> comments) {
         this.comments = comments;
     }
 
@@ -40,13 +42,15 @@ public class CommentsQuerydslDto {
     public static class CommentDto {
 
         private Long memberId;
+        private String memberNickname;
         private String memberProfileUrl;
         private LocalDateTime createdDate;
         private String contents;
 
         @QueryProjection
-        public CommentDto(Long memberId, String memberProfileUrl, LocalDateTime createdDate, String contents) {
+        public CommentDto(Long memberId, String memberNickname, String memberProfileUrl, LocalDateTime createdDate, String contents) {
             this.memberId = memberId;
+            this.memberNickname = memberNickname;
             this.memberProfileUrl = memberProfileUrl;
             this.createdDate = createdDate;
             this.contents = contents;

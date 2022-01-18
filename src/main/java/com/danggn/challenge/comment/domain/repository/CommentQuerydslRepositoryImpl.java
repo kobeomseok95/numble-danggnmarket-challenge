@@ -7,14 +7,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 import static com.danggn.challenge.comment.domain.QComment.comment;
 import static com.danggn.challenge.member.domain.QMember.member;
 import static com.danggn.challenge.product.domain.QProduct.product;
-import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,28 +22,34 @@ public class CommentQuerydslRepositoryImpl implements CommentQuerydslRepository{
 
     @Override
     public Optional<CommentsQuerydslDto> findCommentsByProductId(Long productId) {
-        Map<Long, CommentsQuerydslDto> transform = queryFactory
-                .from(comment)
-                .join(comment.member, member)
-                .join(comment.product, product)
+        CommentsQuerydslDto commentsProduct = queryFactory.select(new QCommentsQuerydslDto(
+                product.id,
+                product.thumbnailImageUrl,
+                product.name,
+                product.productTradeStatus.stringValue(),
+                product.price))
+                .from(product)
                 .where(product.id.eq(productId))
-                .orderBy(comment.createdDate.desc())
-                .transform(groupBy(product.id).as(new QCommentsQuerydslDto(
-                        product.id,
-                        product.thumbnailImageUrl,
-                        product.name,
-                        product.productTradeStatus.stringValue(),
-                        product.price,
-                        list(new QCommentsQuerydslDto_CommentDto(
-                                member.id,
-                                member.profileImageUrl,
-                                comment.createdDate,
-                                comment.contents
-                        )))));
-
-        if (!transform.containsKey(productId)) {
+                .fetchOne();
+        if (commentsProduct == null) {
             return Optional.empty();
         }
-        return Optional.of(transform.get(productId));
+
+        List<CommentsQuerydslDto.CommentDto> comments = queryFactory.select(new QCommentsQuerydslDto_CommentDto(
+                member.id,
+                member.nickname,
+                member.profileImageUrl,
+                comment.createdDate,
+                comment.contents))
+                .from(comment)
+                .join(comment.member, member)
+                .where(comment.product.id.eq(productId))
+                .orderBy(comment.createdDate.desc())
+                .fetch();
+
+        if (!comments.isEmpty()) {
+            commentsProduct.setComments(comments);
+        }
+        return Optional.of(commentsProduct);
     }
 }
