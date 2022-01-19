@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <title>회원가입</title>
+    <style>
+        .form-group {
+            margin-top: 30px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .image {
+            width: 75px;
+            height: 75px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form th:action="@{/members/edit}" th:object="${updateMemberInfoRequest}" method="post" enctype="multipart/form-data" >
+            <div class="form-group">
+                <p style="font-size: 20px;">프로필 수정</p>
+                <input type="hidden" name="memberId" th:field="${updateMemberInfoRequest.memberId}"/>
+            </div>
+            <div class="form-group">
+                <img class="image" th:src="${(updateMemberInfoRequest.profileImageUrl != null && !#strings.isEmpty(updateMemberInfoRequest.profileImageUrl)) ? updateMemberInfoRequest.profileImageUrl : '../img/defaultProfile.png'}"/>
+            </div>
+            <div class="form-group">
+                <label th:for="profileFile"></label>
+                <input type="file" class="custom-file-input" id="profileFile" th:field="*{profileFile}" />
+            </div>
+            <div class="form-group">
+                <label th:for="nickname">닉네임</label>
+                <input type="text" class="form-control" id="nickname" th:field="*{nickname}" />
+                <div class="field-error" th:errors="*{nickname}">닉네임을 확인해주세요.</div>
+            </div>
+            <div class="form-group">
+                <button class="w-100 btn btn-primary btn-lg" style="background-color: orange" type="submit">완료</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -59,13 +59,11 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public String addProduct(
-            @Valid @ModelAttribute("createProductRequest") CreateProductRequest createProductRequest,
-            BindingResult bindingResult,
-            Model model,
-            RedirectAttributes redirectAttributes,
-            @AuthUser LoginMember loginMember
-    ) {
+    public String addProduct(@Valid @ModelAttribute("createProductRequest") CreateProductRequest createProductRequest,
+                             BindingResult bindingResult,
+                             Model model,
+                             RedirectAttributes redirectAttributes,
+                             @AuthUser LoginMember loginMember) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("productCategory", productCategoryProvider.getProductCategoryEnums());
             return "/product/addForm";
@@ -78,4 +76,15 @@ public class ProductController {
         return "redirect:/products/" + productId;
     }
 
+//    @GetMapping("/{productId}/edit")
+//    public String productEditView(@PathVariable("prouctId") Long productId) {
+//
+//        return "/product/editForm";
+//    }
+//
+//    @GetMapping("/{productId}/edit")
+//    public String productEdit(@PathVariable("prouctId") Long productId) {
+//
+//        return "/product/editForm";
+//    }
 }
