@@ -1,6 +1,7 @@
 package com.danggn.challenge.comment.application;
 
 import com.danggn.challenge.comment.application.request.CreateCommentRequestVo;
+import com.danggn.challenge.comment.application.response.CommentResponseVo;
 import com.danggn.challenge.comment.application.response.CommentsResponseVo;
 import com.danggn.challenge.comment.domain.Comment;
 import com.danggn.challenge.comment.domain.repository.dto.CommentsQuerydslDto;
@@ -32,6 +33,7 @@ class CommentApplicationAssembler {
                 .price(commentsQuerydslDto.getPrice())
                 .comments(commentsQuerydslDto.getComments().stream()
                         .map(dto -> CommentsResponseVo.CommentVo.builder()
+                                .commentId(dto.getCommentId())
                                 .memberId(dto.getMemberId())
                                 .memberNickname(dto.getMemberNickname())
                                 .memberProfileUrl(dto.getMemberProfileUrl())
@@ -39,6 +41,14 @@ class CommentApplicationAssembler {
                                 .contents(dto.getContents())
                                 .build())
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    static CommentResponseVo toCommentResponseVo(Comment comment) {
+        return CommentResponseVo.builder()
+                .commentId(comment.getId())
+                .productId(comment.getProduct().getId())
+                .contents(comment.getContents())
                 .build();
     }
 }

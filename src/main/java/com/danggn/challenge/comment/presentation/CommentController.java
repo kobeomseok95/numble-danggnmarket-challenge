@@ -2,6 +2,8 @@ package com.danggn.challenge.comment.presentation;
 
 import com.danggn.challenge.comment.application.CommentUseCase;
 import com.danggn.challenge.comment.presentation.request.CreateCommentRequest;
+import com.danggn.challenge.comment.presentation.request.DeleteCommentRequest;
+import com.danggn.challenge.comment.presentation.request.UpdateCommentRequest;
 import com.danggn.challenge.common.security.AuthUser;
 import com.danggn.challenge.common.security.LoginMember;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +43,6 @@ public class CommentController {
                              RedirectAttributes redirectAttributes,
                              @AuthUser LoginMember loginMember) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("createCommentRequest", new CreateCommentRequest(createCommentRequest.getProductId()));
             return "/comment/addForm";
         }
 
@@ -49,5 +50,35 @@ public class CommentController {
                 CommentPresentationAssembler.toCreateCommentRequestVo(createCommentRequest),
                 loginMember);
         return "redirect:/comments?productId=" + createCommentRequest.getProductId();
+    }
+
+    @GetMapping("/{commentId}/edit")
+    public String editCommentView(@PathVariable("commentId") Long commentId,
+                                  Model model) {
+        UpdateCommentRequest updateCommentRequest = CommentPresentationAssembler.toUpdateCommentRequest(
+                commentUseCase.getComment(commentId));
+        model.addAttribute("updateCommentRequest", updateCommentRequest);
+        return "/comment/editForm";
+    }
+
+    @PostMapping("/edit")
+    public String editComment(@Valid @ModelAttribute UpdateCommentRequest updateCommentRequest,
+                              BindingResult bindingResult,
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("updateCommentRequest", updateCommentRequest);
+            return "/comment/editForm";
+        }
+
+        Long updatedCommentProductId = commentUseCase.update(
+                CommentPresentationAssembler.toUpdateCommentRequestVo(updateCommentRequest));
+        return "redirect:/comments?productId=" + updatedCommentProductId;
+    }
+
+    @PostMapping("/remove")
+    public String deleteComment(@ModelAttribute DeleteCommentRequest deleteCommentRequest) {
+        commentUseCase.delete(deleteCommentRequest.getCommentId());
+        return "redirect:/comments?productId=" + deleteCommentRequest.getProductId();
     }
 }

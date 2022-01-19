@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,6 +53,10 @@
             <img class="member-profile-img" th:src="${comment.memberProfileUrl}"/>
             <span th:text="${comment.memberNickname}">닉네임</span>
             <span th:text="${comment.createdDate}">시간</span>
+            <span th:if="${#authentication.principal.memberId == comment.memberId}">
+              <a th:href="@{/comments/{commentId}/edit(commentId=${comment.commentId})}">수정</a>
+              <a href="#" th:href="|javascript:remove(${comment.commentId}, ${comments.productId})|">삭제</a>
+            </span>
             <div>
               <textarea th:text="${comment.contents}" disabled>댓글 내용</textarea>
             </div>
@@ -67,4 +72,31 @@
     </div>
   </div>
 </body>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  function remove(commentId, productId) {
+    var form = document.createElement("form");
+    form.setAttribute("action", "/comments/remove");
+    form.setAttribute("method", "post");
+
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "productId");
+    hiddenField.setAttribute("value", productId);
+    form.appendChild(hiddenField);
+    hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "commentId");
+    hiddenField.setAttribute("value", commentId);
+    form.appendChild(hiddenField);
+    hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", "_csrf");
+    hiddenField.setAttribute("value", [[${_csrf.token}]]);
+    form.appendChild(hiddenField);
+    document.body.appendChild(form);
+    form.submit();
+    /*]]>*/
+  }
+</script>
 </html>

@@ -36,6 +36,7 @@ public class CommentQuerydslRepositoryImpl implements CommentQuerydslRepository{
         }
 
         List<CommentsQuerydslDto.CommentDto> comments = queryFactory.select(new QCommentsQuerydslDto_CommentDto(
+                comment.id,
                 member.id,
                 member.nickname,
                 member.profileImageUrl,

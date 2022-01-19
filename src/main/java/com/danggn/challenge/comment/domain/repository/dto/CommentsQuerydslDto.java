@@ -41,6 +41,7 @@ public class CommentsQuerydslDto {
     @Builder
     public static class CommentDto {
 
+        private Long commentId;
         private Long memberId;
         private String memberNickname;
         private String memberProfileUrl;
@@ -48,7 +49,8 @@ public class CommentsQuerydslDto {
         private String contents;
 
         @QueryProjection
-        public CommentDto(Long memberId, String memberNickname, String memberProfileUrl, LocalDateTime createdDate, String contents) {
+        public CommentDto(Long commentId, Long memberId, String memberNickname, String memberProfileUrl, LocalDateTime createdDate, String contents) {
+            this.commentId = commentId;
             this.memberId = memberId;
             this.memberNickname = memberNickname;
             this.memberProfileUrl = memberProfileUrl;

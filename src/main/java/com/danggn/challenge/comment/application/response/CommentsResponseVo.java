@@ -23,6 +23,7 @@ public class CommentsResponseVo {
     @Builder
     public static class CommentVo {
 
+        private final Long commentId;
         private final Long memberId;
         private final String memberNickname;
         private final String memberProfileUrl;

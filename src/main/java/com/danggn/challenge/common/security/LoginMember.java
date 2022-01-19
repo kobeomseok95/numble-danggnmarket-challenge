@@ -11,9 +11,11 @@ import java.util.List;
 public class LoginMember extends User {
 
     private Member member;
+    private Long memberId;
 
     public LoginMember(Member member) {
         super(member.getEmail(), member.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        this.memberId = member.getId();
         this.member = member;
     }
 }

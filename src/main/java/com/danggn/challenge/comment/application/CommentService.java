@@ -2,6 +2,7 @@ package com.danggn.challenge.comment.application;
 
 import com.danggn.challenge.comment.application.request.CreateCommentRequestVo;
 import com.danggn.challenge.comment.application.request.UpdateCommentRequestVo;
+import com.danggn.challenge.comment.application.response.CommentResponseVo;
 import com.danggn.challenge.comment.application.response.CommentsResponseVo;
 import com.danggn.challenge.comment.domain.Comment;
 import com.danggn.challenge.comment.domain.repository.CommentJpaRepository;
@@ -57,5 +58,13 @@ class CommentService implements CommentUseCase {
         return CommentApplicationAssembler
                 .toCommentsResponseVo(commentQuerydslRepository.findCommentsByProductId(productId)
                 .orElseThrow());
+    }
+
+    @Override
+    public CommentResponseVo getComment(Long commentId) {
+        return CommentApplicationAssembler.toCommentResponseVo(
+                // TODO : productId 가지고 올 때 LAZY 이슈 확인하기
+                commentJpaRepository.findById(commentId).orElseThrow()
+        );
     }
 }
