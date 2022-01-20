@@ -67,15 +67,22 @@ class ProductCommandService
     }
 
     @Override
-    public Long updateProductInfo(UpdateProductInfoRequestVo updateProductInfoRequestVo) {
-        List<String> urls = fileManager.uploadAndReturnStoredUrl(updateProductInfoRequestVo.getFiles());
-        // TODO : product만 찾아와도 되나???
-        Product target = productJpaRepository.findById(updateProductInfoRequestVo.getProductId())
+    public Long updateProductInfo(UpdateProductInfoRequestVo requestVo) {
+        if (requestVo.getFiles().isEmpty()) {
+            return updateProductNotUpdateImageUrl(requestVo);
+        }
+        List<String> urls = fileManager.uploadAndReturnStoredUrl(requestVo.getFiles());
+        Product target = productJpaRepository.findWithImageUrlsById(requestVo.getProductId())
                 .orElseThrow();
-        // TODO : 문제 없나? product가 바뀌기 전에 Assembler에서 매핑하는데 문제 없이 수정되는지 체크해보기
-        target.updateInfo(
-                ProductApplicationAssembler.toProductEntity(updateProductInfoRequestVo),
+        target.updateInfoWithImageUrls(
+                ProductApplicationAssembler.toProductEntity(requestVo),
                 ProductApplicationAssembler.toProductImageEntity(target, urls));
+        return target.getId();
+    }
+
+    private Long updateProductNotUpdateImageUrl(UpdateProductInfoRequestVo requestVo) {
+        Product target = productJpaRepository.findById(requestVo.getProductId()).orElseThrow();
+        target.updateInfo(ProductApplicationAssembler.toProductEntity(requestVo));
         return target.getId();
     }
 

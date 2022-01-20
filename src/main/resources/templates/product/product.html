@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,7 +34,7 @@
         <div class="product-info">
             <input type="hidden" id="memberId" th:value="${product.memberId}"/>
             <input type="hidden" id="productId" th:value="${product.productId}"/>
-            <img class="seller-profile-image" th:if="${#strings.isEmpty(product.memberProfileUrl)}" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F5330614c-8946-4d89-88d8-b872048bc502%2Fuser_(3).png&blockId=d0a7e8b4-223f-4ff1-8bb7-b1a87556682a&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDc5OTU5LCJleHAiOjE2NDI0OTA3NTl9.Xvok4HBcTc3IkvryZReYSoyntBXmEBEJzAn23QUx3MI"/>
+            <img class="seller-profile-image" th:if="${#strings.isEmpty(product.memberProfileUrl)}" src="../img/defaultProfile.png"/>
             <img class="seller-profile-image" th:unless="${#strings.isEmpty(product.memberProfileUrl)}" th:src="${product.memberProfileUrl}"/>
             <span th:text="${product.memberNickname}">닉네임</span>
             <hr/>
@@ -48,16 +50,40 @@
             <a href="/products" th:href="@{/products/member/{memberId}(memberId=${product.memberId})}">모두 보기</a>
             <div th:each="salesProduct : ${product.memberSaleProducts}">
                 <a th:href="@{/products/{productId}(productId=${product.productId})}">
-                    <img class="product-image" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fa1244cac-6e0f-4f89-8028-fb920433d066%2Fcarrot.png&blockId=57b0556c-a1f9-4b11-83b7-75bf593fa482&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDc5OTU5LCJleHAiOjE2NDI0OTA3NTl9.Xvok4HBcTc3IkvryZReYSoyntBXmEBEJzAn23QUx3MI" th:src="${salesProduct.thumbnailUrl}"/>
+                    <img class="product-image" src="../img/docs.png" th:src="${salesProduct.thumbnailUrl}"/>
                     <p th:text="${salesProduct.productName}">제목</p>
                     <p th:text="${salesProduct.price}">가격</p>
                 </a>
             </div>
         </div>
-        <div align="center">
+        <div align="center" style="margin-bottom: 30px;">
             <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments(productId=${product.productId})}">댓글 보기</a>
             <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments/add(productId=${product.productId})}">댓글 남기기</a>
+            <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">뒤로가기</a>
+        </div>
+        <div align="center" th:if="${#authentication.principal.memberId == product.memberId}">
+            <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products/{productId}/edit(productId=${product.productId})}">수정</a>
+            <a class="btn btn-lg" style="background-color: orange; color: white" th:href="|javascript:remove(${product.productId})|">삭제</a>
         </div>
     </div>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function remove(productId) {
+        if (confirm("해당 상품을 삭제하시겠습니까?")) {
+            var form = document.createElement("form");
+            form.setAttribute("action", "/products/" + productId + "/delete");
+            form.setAttribute("method", "post");
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "_csrf");
+            hiddenField.setAttribute("value", [[${_csrf.token}]]);
+            form.appendChild(hiddenField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    /*]]>*/
+</script>
 </html>

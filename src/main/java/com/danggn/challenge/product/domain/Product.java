@@ -71,12 +71,20 @@ public class Product extends BaseEntity {
         productTradeStatus = ProductTradeStatus.valueOf(status);
     }
 
-    public void updateInfo(Product source, List<ProductImage> sourceImages) {
+    public void updateInfoWithImageUrls(Product source, List<ProductImage> sourceImages) {
         name = source.getName();
         productCategory = source.getProductCategory();
         price = source.getPrice();
         mainText = source.getMainText();
+        thumbnailImageUrl = sourceImages.get(0).getUrl();
         this.productImages.updateProductImages(sourceImages);
+    }
+
+    public void updateInfo(Product source) {
+        name = source.getName();
+        productCategory = source.getProductCategory();
+        price = source.getPrice();
+        mainText = source.getMainText();
     }
 
     public void addCommentsCount() {

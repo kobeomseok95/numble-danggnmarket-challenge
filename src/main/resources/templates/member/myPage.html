@@ -40,7 +40,7 @@
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
         <img class="image" src="../img/docs.png"/>
-        <a th:href="@{/members/edit}" class="btn btn-lg" style="background-color: white">판매내역</a>
+        <a th:href="@{/products/member/{memberId}(memberId = ${#authentication.principal.memberId}, status='SALE')}" class="btn btn-lg" style="background-color: white">판매내역</a>
       </div>
       <div class="col-sm-4"></div>
     </div>
@@ -48,7 +48,7 @@
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
         <img class="image" src="../img/heart.png"/>
-        <a th:href="@{/members/edit}" class="btn btn-lg" style="background-color: white">관심목록</a>
+        <a th:href="@{/products/likes}" class="btn btn-lg" style="background-color: white">관심목록</a>
       </div>
       <div class="col-sm-4"></div>
     </div>

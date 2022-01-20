@@ -105,7 +105,7 @@ public class ProductTest {
         );
 
         // when
-        beforeUpdateProduct.updateInfo(wantUpdateProduct, images);
+        beforeUpdateProduct.updateInfoWithImageUrls(wantUpdateProduct, images);
 
         // then
         assertAll(

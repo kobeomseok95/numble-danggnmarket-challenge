@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+  <title>상품 등록</title>
+  <style>
+    .form-group {
+      margin-top: 30px;
+    }
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+    .product-images {
+      margin-bottom: 75px;
+    }
+    .product-image {
+      width: 150px;
+      height: 150px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form th:action="@{/products/{productId}/edit(productId=${updateProductInfoRequest.productId})}" th:object="${updateProductInfoRequest}" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <p style="font-size: 20px;">상품 수정</p>
+      </div>
+      <div class="product-images" th:each="url : ${updateProductInfoRequest.imageUrls}">
+        <img class="product-image" th:src="${url}" />
+        <input type="hidden" th:field="*{imageUrls}"/>
+      </div>
+      <div class="form-group">
+        <label th:for="files"></label>
+        <input multiple type="file" class="custom-file-input" id="files" th:field="*{files}" />
+      </div>
+      <div class="form-group">
+        <label th:for="name"></label>
+        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="제목" />
+        <div class="field-error" th:errors="*{name}">상품명을 확인해주세요.</div>
+      </div>
+      <div class="form-group">
+        <select class="form-select" id="category" th:field="*{category}">
+          <option value="">---선택---</option>
+          <option th:each="value : ${productCategory}" th:value="${value?.name()}"
+                  th:utext="${value?.value}"
+                  th:selected="${updateProductInfoRequest.category == value}">
+          </option>
+        </select>
+        <div class="field-error" th:errors="*{category}">카테고리를 선택해주세요.</div>
+      </div>
+      <div class="form-group">
+        <label th:for="price"></label>
+        <input type="number" class="form-control" id="price" th:field="*{price}" placeholder="가격(원)" />
+        <div class="field-error" th:errors="*{price}">가격을 확인해주세요.</div>
+      </div>
+      <div class="form-group">
+        <label th:for="mainText"></label>
+        <textarea class="form-control"
+                  id="mainText"
+                  th:field="*{mainText}"
+                  placeholder="게시글 내용을 작성해주세요. 가짜 품목 및 판매금지품목은 게시가 제한됩니다.">
+        </textarea>
+        <div class="field-error" th:errors="*{mainText}">내용을 확인해주세요.</div>
+      </div>
+      <div class="form-group">
+        <button class="w-100 btn btn-primary btn-lg" style="background-color: orange" type="submit">수정하기</button>
+      </div>
+      <div class="form-group">
+        <a th:href="@{/products/{productId}(productId=${updateProductInfoRequest.productId})}" class="w-100 btn btn-primary btn-lg" style="background-color: orange">뒤로가기</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

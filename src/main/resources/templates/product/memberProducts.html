@@ -48,14 +48,40 @@
           <span class="product-trade-status" th:if="${product.productTradeStatus == 'HOLD'}">예약중</span>
           <span class="product-trade-status" th:if="${product.productTradeStatus == 'SOLD_OUT'}">판매완료</span>
           <span th:text="${product.price}">가격</span>
-          <p th:text="${product.likeCount}"><img class="product-icon" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F94fd7095-087d-4a62-ace8-720d1f6632b3%2Fheart.png&blockId=fa7d6c36-c889-464d-b0d2-0daac59c99cf&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDcyMDI5LCJleHAiOjE2NDI0ODI4Mjl9.a6jZGW6I5WX_AvAPYN_K9twZsn1cx7iWQj2lGTsJJWI">좋아요 수</p>
-          <p th:text="${product.commentCount}"><img class="product-icon" src="https://oopy.lazyrockets.com/api/v2/member/image?src=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F4068ae08-1762-4492-9b67-30f9f913a866%2Fconversation.png&blockId=8f072fab-30ea-425b-890c-f7d107fceee8&t=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0bmFtZSI6Ind3dy5udW1ibGUuaXQiLCJyb2xlIjoiYXBpIiwiaWF0IjoxNjQyNDcyMDI5LCJleHAiOjE2NDI0ODI4Mjl9.a6jZGW6I5WX_AvAPYN_K9twZsn1cx7iWQj2lGTsJJWI"/>댓글 수</p>
+          <p th:text="${product.likeCount}"><img class="product-icon" src="../img/heart.png">좋아요 수</p>
+          <p th:text="${product.commentCount}"><img class="product-icon" src="../img/chat.png"/>댓글 수</p>
         </div>
       </a>
+      <div class="row" align="center" th:if="${#authentication.principal.memberId == product.memberId}">
+        <span class="btn btn-lg"><a th:href="|javascript:changeStatus(${product.productId}, 'HOLD')|">예약중으로 변경</a></span>
+        <span class="btn btn-lg"><a th:href="|javascript:changeStatus(${product.productId}, 'SOLD_OUT')|">판매완료로 변경</a></span>
+      </div>
     </div>
-    <div class="start-button-div" align="center" th:if="${products.hasNext()}">
+    <div class="start-button-div" align="center">
       <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">뒤로가기</a>
     </div>
   </div>
 </body>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  function changeStatus(productId, status) {
+    var form = document.createElement("form");
+    form.setAttribute("action", "/products/" + productId + "/status");
+    form.setAttribute("method", "post");
+
+    var statusField = document.createElement("input");
+    statusField.setAttribute("type", "text");
+    statusField.setAttribute("name", "status");
+    statusField.setAttribute("value", status);
+    form.appendChild(statusField);
+    var csrf = document.createElement("input");
+    csrf.setAttribute("type", "hidden");
+    csrf.setAttribute("name", "_csrf");
+    csrf.setAttribute("value", [[${_csrf.token}]]);
+    form.appendChild(csrf);
+    document.body.appendChild(form);
+    form.submit();
+  }
+  /*]]>*/
+</script>
 </html>

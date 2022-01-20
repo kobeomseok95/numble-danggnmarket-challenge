@@ -21,7 +21,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/members")
-public class MemberController {
+public class MemberInfoController {
 
     private final MemberUseCase memberUseCase;
     private final MemberPresentationAssembler presentationAssembler;

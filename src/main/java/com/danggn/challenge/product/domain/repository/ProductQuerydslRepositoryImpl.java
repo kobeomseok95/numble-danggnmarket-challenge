@@ -2,7 +2,6 @@ package com.danggn.challenge.product.domain.repository;
 
 import com.danggn.challenge.product.domain.ProductTradeStatus;
 import com.danggn.challenge.product.domain.repository.dto.*;
-import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ import static com.danggn.challenge.product.domain.QLike.like;
 import static com.danggn.challenge.product.domain.QProduct.product;
 import static com.danggn.challenge.product.domain.QProductImage.productImage;
 import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 @Repository
 @RequiredArgsConstructor
@@ -77,7 +77,7 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
                 .leftJoin(product.productImages.values, productImage)
                 .where(product.id.eq(productId))
                 .transform(groupBy(product.id).as(new QProductDetailQuerydslDto(
-                        GroupBy.list(productImage.url),
+                        list(productImage.url),
                         member.id,
                         member.profileImageUrl,
                         product.id,
@@ -126,5 +126,24 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
             default:
                 return null;
         }
+    }
+
+    @Override
+    public Optional<UpdateProductInfoQuerydslDto> findWithImageUrlById(Long productId) {
+        Map<Long, UpdateProductInfoQuerydslDto> transform = queryFactory.from(product)
+                .leftJoin(product.productImages.values, productImage)
+                .where(product.id.eq(productId))
+                .transform(groupBy(product.id).as(new QUpdateProductInfoQuerydslDto(
+                        product.id,
+                        list(productImage.url),
+                        product.name,
+                        product.productCategory.stringValue(),
+                        product.price,
+                        product.mainText
+                )));
+        if (!transform.containsKey(productId)) {
+            return Optional.empty();
+        }
+        return Optional.of(transform.get(productId));
     }
 }

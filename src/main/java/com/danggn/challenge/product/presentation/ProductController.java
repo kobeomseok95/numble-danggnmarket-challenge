@@ -7,6 +7,8 @@ import com.danggn.challenge.product.application.usecase.ProductCommandUseCase;
 import com.danggn.challenge.product.application.usecase.ProductQueryUseCase;
 import com.danggn.challenge.product.presentation.request.CreateProductRequest;
 import com.danggn.challenge.product.presentation.request.ProductStatusRequest;
+import com.danggn.challenge.product.presentation.request.UpdateProductInfoRequest;
+import com.danggn.challenge.product.presentation.request.UpdateProductTradeStatusRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -25,17 +27,16 @@ public class ProductController {
     private final ProductCommandUseCase productCommandUseCase;
     private final ProductQueryUseCase productQueryUseCase;
     private final ProductCategoryProvider productCategoryProvider;
-    private final ProductPresentationAssembler presentationAssembler;
 
     @GetMapping("")
     public String productsView(Pageable pageable, Model model) {
-        model.addAttribute("products", productQueryUseCase.getProducts(pageable));
+        model.addAttribute("products", productQueryUseCase.findProducts(pageable));
         return "/product/products";
     }
 
     @GetMapping("/{productId}")
     public String product(@PathVariable("productId") Long productId, Model model) {
-        model.addAttribute("product", productQueryUseCase.getProductDetail(productId));
+        model.addAttribute("product", productQueryUseCase.findProductDetail(productId));
         return "/product/product";
     }
 
@@ -70,21 +71,61 @@ public class ProductController {
         }
 
         Long productId = productCommandUseCase.save(
-                presentationAssembler.toCreateProductRequestVo(createProductRequest),
-                loginMember
-        );
+                ProductPresentationAssembler.toCreateProductRequestVo(createProductRequest),
+                loginMember);
         return "redirect:/products/" + productId;
     }
 
-//    @GetMapping("/{productId}/edit")
-//    public String productEditView(@PathVariable("prouctId") Long productId) {
-//
-//        return "/product/editForm";
-//    }
-//
-//    @GetMapping("/{productId}/edit")
-//    public String productEdit(@PathVariable("prouctId") Long productId) {
-//
-//        return "/product/editForm";
-//    }
+    @PostMapping("/{productId}/status")
+    public String changeStatus(@PathVariable("productId") Long productId,
+                               UpdateProductTradeStatusRequest request,
+                               @AuthUser LoginMember loginMember) {
+        productCommandUseCase.updateProductStatus(
+                        ProductPresentationAssembler.toUpdateProductTradeStatusRequestVo(productId, request));
+        return "redirect:/products/member/" + loginMember.getMemberId();
+    }
+
+    @GetMapping("/likes")
+    public String getLikeProducts(Pageable pageable,
+                                  Model model,
+                                  @AuthUser LoginMember loginMember) {
+        model.addAttribute("products",
+                productQueryUseCase.findLikeProducts(loginMember.getMemberId(), pageable));
+        return "product/likeProducts";
+    }
+
+    @GetMapping("/{productId}/edit")
+    public String productEditView(@PathVariable("productId") Long productId,
+                                  Model model) {
+        model.addAttribute("updateProductInfoRequest", getUpdateProductInfoRequest(productId));
+        model.addAttribute("productCategory", productCategoryProvider.getProductCategoryEnums());
+        return "/product/editForm";
+    }
+
+    private UpdateProductInfoRequest getUpdateProductInfoRequest(Long productId) {
+        return ProductPresentationAssembler
+                .toUpdateProductInfoRequest(productQueryUseCase.findProductInfo(productId));
+    }
+
+    @PostMapping("/{productId}/edit")
+    public String productEdit(@PathVariable("productId") Long productId,
+                              @Valid @ModelAttribute UpdateProductInfoRequest updateProductInfoRequest,
+                              BindingResult bindingResult,
+                              Model model,
+                              RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("productCategory", productCategoryProvider.getProductCategoryEnums());
+            return "/product/editForm";
+        }
+        productCommandUseCase.updateProductInfo(ProductPresentationAssembler.toUpdateProductInfoRequestVo(productId,
+                updateProductInfoRequest));
+        return "redirect:/products/" + productId;
+    }
+
+    @PostMapping("/{productId}/delete")
+    public String productDelete(@PathVariable("productId") Long productId,
+                                RedirectAttributes redirectAttributes) {
+        productCommandUseCase.deleteProduct(productId);
+        return "redirect:/products";
+    }
 }

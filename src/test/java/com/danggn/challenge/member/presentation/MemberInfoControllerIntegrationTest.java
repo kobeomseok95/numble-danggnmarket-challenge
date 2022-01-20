@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class MemberControllerIntegrationTest extends IntegrationTest {
+class MemberInfoControllerIntegrationTest extends IntegrationTest {
 
     @Autowired
     MemberJpaRepository memberJpaRepository;
@@ -32,7 +32,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
         mockMvc.perform(get("/members/join"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("joinView"))
                 .andExpect(view().name("member/joinForm"))
                 .andExpect(model().attributeExists("joinMemberRequest"));
@@ -53,7 +53,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
                 .param("nickname", "고범석"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(redirectedUrl("/"));
     }
@@ -73,7 +73,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
                 .param("nickname", ""))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(model().errorCount(7));
     }
@@ -93,7 +93,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
                 .param("nickname", "김"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(model().errorCount(3));
     }
@@ -119,7 +119,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
                 .param("nickname", nickname))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("join"))
                 .andExpect(model().errorCount(3));
     }
@@ -142,7 +142,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
         mockMvc.perform(get("/members/login"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("loginView"))
                 .andExpect(view().name("/member/loginForm"))
                 .andExpect(model().attributeExists("loginRequest"));
@@ -165,7 +165,7 @@ class MemberControllerIntegrationTest extends IntegrationTest {
                 .param("password", "1234"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/products"));
     }
 
     @Test

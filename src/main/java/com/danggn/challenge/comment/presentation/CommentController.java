@@ -76,7 +76,7 @@ public class CommentController {
         return "redirect:/comments?productId=" + updatedCommentProductId;
     }
 
-    @PostMapping("/remove")
+    @PostMapping("/delete")
     public String deleteComment(@ModelAttribute DeleteCommentRequest deleteCommentRequest) {
         commentUseCase.delete(deleteCommentRequest.getCommentId());
         return "redirect:/comments?productId=" + deleteCommentRequest.getProductId();
