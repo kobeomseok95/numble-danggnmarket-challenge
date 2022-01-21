@@ -38,7 +38,9 @@ class CommentServiceTest {
         // given
         LoginMember loginMember = mock(LoginMember.class);
         CreateCommentRequestVo requestVo = createMockCreateCommentRequestVo();
-        Product product = Product.builder().id(requestVo.getProductId()).build();
+        Product product = Product.builder().id(requestVo.getProductId())
+                .commentsCount(0L)
+                .build();
         when(productJpaRepository.findById(requestVo.getProductId()))
                 .thenReturn(Optional.of(product));
 
@@ -98,7 +100,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .id(1L)
                 .product(Product.builder()
-                        .commentsCount(1)
+                        .commentsCount(1L)
                         .build())
                 .build();
         when(commentJpaRepository.findWithProductById(any()))

@@ -46,9 +46,9 @@ public class Product extends BaseEntity {
     @Embedded
     private Likes likes;
 
-    private int likesCount;
+    private Long likesCount;
 
-    private int commentsCount;
+    private Long commentsCount;
 
     private String thumbnailImageUrl;
 
@@ -57,12 +57,12 @@ public class Product extends BaseEntity {
         this.productImages.addAll(productImages);
     }
 
-    public void addLike(Like like) {
+    public void like(Like like) {
         likes.add(like);
         likesCount++;
     }
 
-    public void removeLike(Like like) {
+    public void unlike(Like like) {
         likes.remove(like);
         likesCount--;
     }

@@ -34,12 +34,13 @@
 <body>
   <div class="container">
     <div th:replace="/fragments/productsFragment :: products-list-fragment(${products})">
-    <div class="start-button-div" align="center" th:if="${products.hasNext()}">
-      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">더보기</a>
     </div>
-    <div class="start-button-div" align="center">
-      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/members/me}">마이페이지로 돌아가기</a>
-    </div>
+      <div class="start-button-div" align="center" th:if="${products.hasNext()}">
+        <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">더보기</a>
+      </div>
+      <div class="start-button-div" align="center">
+        <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/members/me}">마이페이지로 돌아가기</a>
+      </div>
   </div>
 </body>
 </html>

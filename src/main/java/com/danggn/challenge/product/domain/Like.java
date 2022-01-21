@@ -35,7 +35,19 @@ public class Like extends BaseEntity {
     private Product product;
 
     public boolean isEqual(Like like) {
-        return this.member.equals(like.getMember())
-                && this.product.equals(like.getProduct());
+        return member.getId().equals(like.getMemberId())
+                && product.getId().equals(like.ProductId());
+    }
+
+    private Long getMemberId() {
+        return member.getId();
+    }
+
+    private Long ProductId() {
+        return product.getId();
+    }
+
+    public void remove() {
+        product = null;
     }
 }

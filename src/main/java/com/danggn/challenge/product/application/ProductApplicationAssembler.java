@@ -30,7 +30,8 @@ class ProductApplicationAssembler {
                 .mainText(vo.getMainText())
                 .productTradeStatus(ProductTradeStatus.SALE)
                 .likes(Likes.builder().build())
-                .likesCount(0)
+                .likesCount(0L)
+                .commentsCount(0L)
                 .thumbnailImageUrl(thumbnailUrl.isEmpty() ? null : thumbnailUrl.get(0))
                 .build();
     }

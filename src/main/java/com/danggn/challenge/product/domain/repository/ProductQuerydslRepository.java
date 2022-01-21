@@ -19,4 +19,6 @@ public interface ProductQuerydslRepository {
     List<ProductsQuerydslDto> findByMemberIdStatus(Long memberId, String productStatusName, Pageable pageable);
 
     Optional<UpdateProductInfoQuerydslDto> findWithImageUrlById(Long productId);
+
+    List<Long> findLikeProductIdsByMemberId(Long memberId);
 }

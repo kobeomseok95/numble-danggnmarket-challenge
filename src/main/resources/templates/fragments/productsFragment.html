@@ -8,17 +8,64 @@
   <div class="products-div" th:fragment="products-list-fragment (products)" th:each="product : ${products}">
     <a th:href="@{/products/{productId}(productId=${product.productId})}">
       <img class="product-img" th:if="${#strings.isEmpty(product.thumbnailImageUrl)}" src="../img/camera.png"/>
-      <img class="product-img" th:unless="${#strings.isEmpty(product.thumbnailImageUrl)}" th:src="${product.thumbnailImageUrl}"/>
-      <div class="product-info-div">
-        <p th:text="${product.productName}">상품명</p>
-        <p>장소</p>
-        <span class="product-trade-status" th:if="${product.productTradeStatus == 'HOLD'}">예약중</span>
-        <span class="product-trade-status" th:if="${product.productTradeStatus == 'SOLD_OUT'}">판매완료</span>
-        <span th:text="${product.price}">가격</span><br/>
-        <img class="product-icon" src="../img/heart.png"><span th:text="${product.likeCount}">좋아요 수</span>
-        <img class="product-icon" src="../img/chat.png"/><span th:text="${product.commentCount}">댓글 수</span>
-      </div>
     </a>
+    <img class="product-img" th:unless="${#strings.isEmpty(product.thumbnailImageUrl)}" th:src="${product.thumbnailImageUrl}"/>
+    <div class="product-info-div">
+      <p th:text="${product.productName}">상품명</p>
+      <p>장소</p>
+      <span class="product-trade-status" th:if="${product.productTradeStatus == 'HOLD'}">예약중</span>
+      <span class="product-trade-status" th:if="${product.productTradeStatus == 'SOLD_OUT'}">판매완료</span>
+      <span th:text="${product.price}">가격</span><br/>
+      <span th:if="${#lists.contains(likeProductIds, product.productId)}">
+        <img th:id="'likeImage' + ${product.productId}" th:onclick="|javascript:unlike(${product.productId})|" class="product-icon" src="../img/like.png">
+        <span th:id="'likeCount' + ${product.productId}" th:text="${product.likeCount}">좋아요 수</span>
+      </span>
+      <span th:unless="${#lists.contains(likeProductIds, product.productId)}">
+        <img th:id="'likeImage' + ${product.productId}" th:onclick="|javascript:like(${product.productId})|" class="product-icon" src="../img/heart.png">
+        <span th:id="'likeCount' + ${product.productId}" th:text="${product.likeCount}">좋아요 수</span>
+      </span>
+      <img class="product-icon" src="../img/chat.png"/>
+      <span th:text="${product.commentCount}">댓글 수</span>
+    </div>
+
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      const xhr = new XMLHttpRequest();
+      function like(productId) {
+        xhr.onreadystatechange = function() {
+          if (xhr.status === 200) {
+            var data = JSON.parse(xhr.response);
+            var likeImage = document.getElementById('likeImage' + productId);
+            likeImage.setAttribute('src', '../img/like.png');
+            likeImage.setAttribute('onclick', 'javascript:unlike(' + productId + ')');
+            var likeCount = document.getElementById('likeCount' + productId);
+            likeCount.innerHTML = data.likeCount;
+          }
+        }
+        xhr.open("POST", "/products/" + productId + "/like", true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.setRequestHeader('X-CSRF-Token', [[${_csrf.token}]]);
+        xhr.send();
+      }
+
+      function unlike(productId) {
+        xhr.onreadystatechange = function() {
+          if (xhr.status === 200) {
+            var data = JSON.parse(xhr.response);
+            var likeImage = document.getElementById('likeImage' + productId);
+            likeImage.setAttribute('src', '../img/heart.png');
+            likeImage.setAttribute('onclick', 'javascript:like(' + productId + ')');
+            var likeCount = document.getElementById('likeCount' + productId);
+            likeCount.innerHTML = data.likeCount;
+          }
+        }
+        xhr.open("POST", "/products/" + productId + "/unlike", true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.setRequestHeader('X-CSRF-Token', [[${_csrf.token}]]);
+        xhr.send();
+      }
+      /*]]>*/
+    </script>
   </div>
 </body>
 </html>

@@ -4,6 +4,8 @@ import com.danggn.challenge.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -38,11 +40,15 @@ public class ProductTest {
         Product product = Product.builder()
                 .id(1L)
                 .likes(Likes.builder().build())
+                .likesCount(0L)
                 .build();
-        Like like = Like.builder().product(product).build();
+        Member member = Member.builder().id(1L).build();
+        Like like = Like.builder().product(product)
+                .member(member)
+                .build();
 
         // when
-        product.addLike(like);
+        product.like(like);
 
         // then
         List<Like> values = product.getLikes().getValues();
@@ -61,7 +67,7 @@ public class ProductTest {
         Product product = Product.builder()
                 .id(1L)
                 .likes(Likes.builder().build())
-                .likesCount(1)
+                .likesCount(1L)
                 .build();
         Member member = Member.builder().id(1L).build();
         Like like = Like.builder()
@@ -71,7 +77,7 @@ public class ProductTest {
         product.getLikes().getValues().add(like);
 
         // when
-        product.removeLike(like);
+        product.unlike(like);
 
         // then
         List<Like> values = product.getLikes().getValues();
@@ -88,9 +94,10 @@ public class ProductTest {
         // given
         Product beforeUpdateProduct = Product.builder()
                 .productImages(ProductImages.builder()
-                        .values(List.of(ProductImage.builder()
-                                .url("변경 전")
-                                .build()))
+                        .values(new ArrayList<>(List.of(
+                                ProductImage.builder()
+                                        .url("변경 전")
+                                        .build())))
                         .build())
                 .build();
         Product wantUpdateProduct = Product.builder()
@@ -99,10 +106,10 @@ public class ProductTest {
                 .price(100_000L)
                 .mainText("변경")
                 .build();
-        List<ProductImage> images = List.of(
+        List<ProductImage> images = new ArrayList<>(Arrays.asList(
                 ProductImage.builder().url("변경완료1").build(),
                 ProductImage.builder().url("변경완료2").build()
-        );
+        ));
 
         // when
         beforeUpdateProduct.updateInfoWithImageUrls(wantUpdateProduct, images);

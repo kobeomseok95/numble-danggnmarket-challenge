@@ -5,6 +5,7 @@ import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 import com.danggn.challenge.product.application.request.UpdateProductInfoRequestVo;
 import com.danggn.challenge.product.application.request.UpdateProductTradeStatusRequestVo;
 import com.danggn.challenge.product.presentation.request.CreateProductRequest;
+import com.danggn.challenge.product.presentation.request.LikeCount;
 import com.danggn.challenge.product.presentation.request.UpdateProductInfoRequest;
 import com.danggn.challenge.product.presentation.request.UpdateProductTradeStatusRequest;
 import org.springframework.stereotype.Component;
@@ -48,7 +49,7 @@ class ProductPresentationAssembler {
                 .build();
     }
 
-    public static UpdateProductInfoRequest toUpdateProductInfoRequest(UpdateProductInfoRequestVo requestVo) {
+    static UpdateProductInfoRequest toUpdateProductInfoRequest(UpdateProductInfoRequestVo requestVo) {
         return UpdateProductInfoRequest.builder()
                 .productId(requestVo.getProductId())
                 .imageUrls(requestVo.getImageUrls())
@@ -56,6 +57,12 @@ class ProductPresentationAssembler {
                 .category(requestVo.getCategory())
                 .price(requestVo.getPrice())
                 .mainText(requestVo.getMainText())
+                .build();
+    }
+
+    static LikeCount toLikeCount(Long count) {
+        return LikeCount.builder()
+                .likeCount(count)
                 .build();
     }
 }

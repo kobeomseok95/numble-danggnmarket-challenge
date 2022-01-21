@@ -1,5 +1,6 @@
 package com.danggn.challenge.product.application;
 
+import com.danggn.challenge.common.security.LoginMember;
 import com.danggn.challenge.product.application.request.UpdateProductInfoRequestVo;
 import com.danggn.challenge.product.application.response.ProductDetailResponseVo;
 import com.danggn.challenge.product.application.response.ProductsResponseVo;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +53,10 @@ class ProductQueryService implements ProductQueryUseCase {
     public UpdateProductInfoRequestVo findProductInfo(Long productId) {
         return ProductApplicationAssembler.toUpdateProductInfoResponseVo(
                 productQuerydslRepository.findWithImageUrlById(productId).orElseThrow());
+    }
+
+    @Override
+    public List<Long> getLikeProductIds(LoginMember loginMember) {
+        return productQuerydslRepository.findLikeProductIdsByMemberId(loginMember.getMemberId());
     }
 }

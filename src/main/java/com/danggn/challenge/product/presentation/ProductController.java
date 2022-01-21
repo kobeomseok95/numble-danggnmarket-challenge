@@ -29,8 +29,11 @@ public class ProductController {
     private final ProductCategoryProvider productCategoryProvider;
 
     @GetMapping("")
-    public String productsView(Pageable pageable, Model model) {
+    public String productsView(Pageable pageable,
+                               Model model,
+                               @AuthUser LoginMember loginMember) {
         model.addAttribute("products", productQueryUseCase.findProducts(pageable));
+        model.addAttribute("likeProductIds", productQueryUseCase.getLikeProductIds(loginMember));
         return "/product/products";
     }
 
@@ -91,6 +94,7 @@ public class ProductController {
                                   @AuthUser LoginMember loginMember) {
         model.addAttribute("products",
                 productQueryUseCase.findLikeProducts(loginMember.getMemberId(), pageable));
+        model.addAttribute("likeProductIds", productQueryUseCase.getLikeProductIds(loginMember));
         return "product/likeProducts";
     }
 

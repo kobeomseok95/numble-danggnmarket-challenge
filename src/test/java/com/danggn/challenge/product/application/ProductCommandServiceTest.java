@@ -18,11 +18,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -99,7 +102,7 @@ class ProductCommandServiceTest {
         // given
         LoginMember loginMember = mock(LoginMember.class);
         Product zeroLikeProduct = createZeroLikeProduct();
-        when(productJpaRepository.findById(any()))
+        when(productJpaRepository.findWithLikesById(any()))
                 .thenReturn(Optional.of(zeroLikeProduct));
         Like like = Like.builder()
                 .product(zeroLikeProduct)
@@ -123,6 +126,7 @@ class ProductCommandServiceTest {
         return Product.builder()
                 .id(1L)
                 .likes(Likes.builder().build())
+                .likesCount(0L)
                 .build();
     }
 
@@ -140,7 +144,7 @@ class ProductCommandServiceTest {
                 .product(oneLikeProduct)
                 .member(loginMember.getMember())
                 .build();
-        when(productJpaRepository.findById(any()))
+        when(productJpaRepository.findWithLikesById(any()))
                 .thenReturn(Optional.of(oneLikeProduct));
 
         // when
@@ -155,6 +159,7 @@ class ProductCommandServiceTest {
         Product product = Product.builder()
                 .id(1L)
                 .likes(Likes.builder().build())
+                .likesCount(0L)
                 .build();
 
         product.getLikes().getValues().add(Like.builder()
@@ -220,7 +225,7 @@ class ProductCommandServiceTest {
         UpdateProductInfoRequestVo requestVo = createMockUpdateProductInfoRequestVo();
         Product product = createMockProductWithImages();
         fileManagerRenameStub(requestVo.getFiles(), requestVo.getFileNames());
-        when(productJpaRepository.findById(any()))
+        when(productJpaRepository.findWithImageUrlsById(any()))
                 .thenReturn(Optional.of(product));
 
         // when
@@ -228,7 +233,7 @@ class ProductCommandServiceTest {
 
         // then
         assertAll(
-                () -> verify(productJpaRepository).findById(requestVo.getProductId()),
+                () -> verify(productJpaRepository).findWithImageUrlsById(requestVo.getProductId()),
                 () -> assertEquals(product.getProductImages().getValues().size(), requestVo.getFiles().size()),
                 () -> assertEquals(product.getMainText(), requestVo.getMainText()),
                 () -> assertEquals(product.getName(), requestVo.getName()),
@@ -253,9 +258,9 @@ class ProductCommandServiceTest {
     private Product createMockProductWithImages() {
         return Product.builder()
                 .productImages(ProductImages.builder()
-                        .values(List.of(
+                        .values(new ArrayList<>(Arrays.asList(
                                 ProductImage.builder().id(1L).url("test url").build()
-                        ))
+                        )))
                         .build())
                 .name("변경 전 판매상품")
                 .productCategory(ProductCategory.ETC)

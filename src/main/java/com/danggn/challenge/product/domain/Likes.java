@@ -20,7 +20,8 @@ public class Likes extends AbstractEmbeddable {
     @OneToMany(
             mappedBy = "product",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.PERSIST
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true
     )
     @Builder.Default
     private List<Like> values = new ArrayList<>();
@@ -43,5 +44,6 @@ public class Likes extends AbstractEmbeddable {
 
     public void remove(Like like) {
         values.removeIf(like::isEqual);
+        like.remove();
     }
 }

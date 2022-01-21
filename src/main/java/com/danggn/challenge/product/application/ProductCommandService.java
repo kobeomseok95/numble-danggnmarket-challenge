@@ -6,7 +6,6 @@ import com.danggn.challenge.product.application.request.CreateProductRequestVo;
 import com.danggn.challenge.product.application.request.UpdateProductInfoRequestVo;
 import com.danggn.challenge.product.application.request.UpdateProductTradeStatusRequestVo;
 import com.danggn.challenge.product.application.usecase.ProductCommandUseCase;
-import com.danggn.challenge.product.application.usecase.ProductLikeUseCase;
 import com.danggn.challenge.product.domain.Like;
 import com.danggn.challenge.product.domain.Product;
 import com.danggn.challenge.product.domain.repository.ProductJpaRepository;
@@ -20,8 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 class ProductCommandService
-        implements ProductLikeUseCase,
-        ProductCommandUseCase {
+        implements ProductCommandUseCase {
 
     private final FileManager fileManager;
     private final ProductJpaRepository productJpaRepository;
@@ -40,11 +38,12 @@ class ProductCommandService
     }
 
     @Override
-    public void like(Long productId, LoginMember loginMember) {
-        Product product = productJpaRepository.findById(productId)
+    public Long like(Long productId, LoginMember loginMember) {
+        Product product = productJpaRepository.findWithLikesById(productId)
                 .orElseThrow();
         Like like = getLikeEntity(product, loginMember);
-        product.addLike(like);
+        product.like(like);
+        return product.getLikesCount();
     }
 
     private Like getLikeEntity(Product product, LoginMember loginMember) {
@@ -52,11 +51,12 @@ class ProductCommandService
     }
 
     @Override
-    public void unlike(Long productId, LoginMember loginMember) {
-        Product product = productJpaRepository.findById(productId)
+    public Long unlike(Long productId, LoginMember loginMember) {
+        Product product = productJpaRepository.findWithLikesById(productId)
                 .orElseThrow();
         Like like = getLikeEntity(product, loginMember);
-        product.removeLike(like);
+        product.unlike(like);
+        return product.getLikesCount();
     }
 
     @Override

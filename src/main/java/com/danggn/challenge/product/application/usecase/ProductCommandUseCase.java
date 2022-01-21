@@ -14,4 +14,8 @@ public interface ProductCommandUseCase {
     Long updateProductInfo(UpdateProductInfoRequestVo updateProductInfoRequestVo);
 
     void deleteProduct(Long id);
+
+    Long like(Long productId, LoginMember loginMember);
+
+    Long unlike(Long productId, LoginMember loginMember);
 }

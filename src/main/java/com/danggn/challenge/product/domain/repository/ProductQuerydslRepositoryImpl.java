@@ -146,4 +146,12 @@ class ProductQuerydslRepositoryImpl implements ProductQuerydslRepository{
         }
         return Optional.of(transform.get(productId));
     }
+
+    @Override
+    public List<Long> findLikeProductIdsByMemberId(Long memberId) {
+        return queryFactory.select(like.product.id)
+                .from(like)
+                .where(like.member.id.eq(memberId))
+                .fetch();
+    }
 }

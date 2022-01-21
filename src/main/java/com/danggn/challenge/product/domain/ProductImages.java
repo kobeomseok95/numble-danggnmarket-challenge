@@ -41,7 +41,7 @@ public class ProductImages extends AbstractEmbeddable {
          * TODO 이슈 정리 이전 코드 : this.values = productImages;
          *  명시적으로 clear 해줘야 한다.
          */
-        this.values.clear();
+        values.clear();
         addAll(productImages);
     }
 }

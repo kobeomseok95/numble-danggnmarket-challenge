@@ -3,10 +3,11 @@ package com.danggn.challenge.product.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ProductImagesTest {
 
@@ -50,13 +51,11 @@ class ProductImagesTest {
     void updateProductImages_success() throws Exception {
 
         // given
-        ProductImages productImages = ProductImages.builder()
-                .values(Collections.emptyList())
-                .build();
-        List<ProductImage> images = List.of(
+        ProductImages productImages = ProductImages.builder().build();
+        List<ProductImage> images = new ArrayList<>(Arrays.asList(
                 ProductImage.builder().url("변경완료1").build(),
                 ProductImage.builder().url("변경완료2").build()
-        );
+        ));
 
         // when
         productImages.updateProductImages(images);
