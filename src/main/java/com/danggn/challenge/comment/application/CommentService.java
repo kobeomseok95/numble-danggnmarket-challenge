@@ -63,7 +63,6 @@ class CommentService implements CommentUseCase {
     @Override
     public CommentResponseVo getComment(Long commentId) {
         return CommentApplicationAssembler.toCommentResponseVo(
-                // TODO : productId 가지고 올 때 LAZY 이슈 확인하기
                 commentJpaRepository.findById(commentId).orElseThrow()
         );
     }

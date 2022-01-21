@@ -10,5 +10,4 @@ import lombok.*;
 public class DeleteCommentRequest {
 
     private Long productId;
-    private Long commentId;
 }

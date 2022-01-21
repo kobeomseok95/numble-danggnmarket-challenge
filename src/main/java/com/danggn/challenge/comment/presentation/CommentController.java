@@ -76,9 +76,10 @@ public class CommentController {
         return "redirect:/comments?productId=" + updatedCommentProductId;
     }
 
-    @PostMapping("/delete")
-    public String deleteComment(@ModelAttribute DeleteCommentRequest deleteCommentRequest) {
-        commentUseCase.delete(deleteCommentRequest.getCommentId());
+    @PostMapping("/{commentId}/delete")
+    public String deleteComment(@PathVariable("commentId") Long commentId,
+                                @ModelAttribute DeleteCommentRequest deleteCommentRequest) {
+        commentUseCase.delete(commentId);
         return "redirect:/comments?productId=" + deleteCommentRequest.getProductId();
     }
 }

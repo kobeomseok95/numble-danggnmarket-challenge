@@ -72,24 +72,18 @@
     </div>
   </div>
 </body>
-<!--TODO /comments/{commendId}/delete 로 구조 변경하기-->
 <script th:inline="javascript">
   /*<![CDATA[*/
   function remove(commentId, productId) {
     if (confirm("해당 댓글을 삭제하시겠습니까?")) {
       var form = document.createElement("form");
-      form.setAttribute("action", "/comments/delete");
+      form.setAttribute("action", "/comments/" + commentId + "/delete");
       form.setAttribute("method", "post");
 
       var hiddenField = document.createElement("input");
       hiddenField.setAttribute("type", "hidden");
       hiddenField.setAttribute("name", "productId");
       hiddenField.setAttribute("value", productId);
-      form.appendChild(hiddenField);
-      hiddenField = document.createElement("input");
-      hiddenField.setAttribute("type", "hidden");
-      hiddenField.setAttribute("name", "commentId");
-      hiddenField.setAttribute("value", commentId);
       form.appendChild(hiddenField);
       hiddenField = document.createElement("input");
       hiddenField.setAttribute("type", "hidden");
