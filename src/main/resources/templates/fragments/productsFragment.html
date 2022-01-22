@@ -8,8 +8,8 @@
   <div class="products-div" th:fragment="products-list-fragment (products)" th:each="product : ${products}">
     <a th:href="@{/products/{productId}(productId=${product.productId})}">
       <img class="product-img" th:if="${#strings.isEmpty(product.thumbnailImageUrl)}" src="../img/camera.png"/>
+      <img class="product-img" th:unless="${#strings.isEmpty(product.thumbnailImageUrl)}" th:src="${product.thumbnailImageUrl}"/>
     </a>
-    <img class="product-img" th:unless="${#strings.isEmpty(product.thumbnailImageUrl)}" th:src="${product.thumbnailImageUrl}"/>
     <div class="product-info-div">
       <p th:text="${product.productName}">상품명</p>
       <p>장소</p>

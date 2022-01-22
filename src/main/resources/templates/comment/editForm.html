@@ -36,7 +36,7 @@
       </div>
     </form>
     <div class="start-button-div" align="center">
-      <a class="btn btn-lg" style="background-color: orange; color: white" href="javascript:window.history.back()">뒤로가기</a>
+      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments(productId=${updateCommentRequest.productId})}">뒤로가기</a>
     </div>
   </div>
 </body>

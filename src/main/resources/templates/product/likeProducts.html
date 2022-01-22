@@ -33,7 +33,7 @@
 </head>
 <body>
   <div class="container">
-    <div th:replace="/fragments/productsFragment :: products-list-fragment(${products})">
+    <div th:replace="fragments/productsFragment :: products-list-fragment(${products})">
     </div>
       <div class="start-button-div" align="center" th:if="${products.hasNext()}">
         <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products}">더보기</a>

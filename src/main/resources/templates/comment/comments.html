@@ -68,7 +68,7 @@
       <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/comments/add(productId=${comments.productId})}">댓글 남기기</a>
     </div>
     <div class="start-button-div" align="center">
-      <a class="btn btn-lg" style="background-color: orange; color: white" href="javascript:window.history.back()">뒤로가기</a>
+      <a class="btn btn-lg" style="background-color: orange; color: white" th:href="@{/products/{productId}(productId=${comments.productId})}">뒤로가기</a>
     </div>
   </div>
 </body>

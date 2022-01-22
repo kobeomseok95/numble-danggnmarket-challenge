@@ -51,7 +51,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ENC(h7fzXS+olTtHrrRSlrvM/FInlo+9sXaRfxVvY5q9OS1uCqTw6NQpEFqvDuCLFqtAukKiMkSZp7/L5gloUZJezOZ97XbT9ClMFHfv2mnRiGLmWXylRsB1o5wC7IhEohjwEfZggYAeSWQ=)
+    url: ENC(rff/3AqNQg7Nl3j3lAgwjlt+P2BSATog3b5KoWmLTArRqhxVB6Us1JPHMbxqAhzCBrxQGflQBAKEyzbnDQ5cckmqCBg8hcltIU/f2KhPJR4qw6PNlwgI+O2lzHOsqdVnRwv16h+fTAl+/WGTEgyKJ2fgs+frWmH0V3mF2fVtRuMFThqm9qEn7v4cvtNIa+Ej)
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ENC(EtYPV83KhfOyXb7SdMEGbw==)
     password: ENC(Nhc6LlFYfE2ye+JfZHAV20+EC3WIp9Go)
@@ -66,5 +66,3 @@ spring:
   h2:
     console:
       enabled: false
-  thymeleaf:
-    prefix: classpath:/templates/
