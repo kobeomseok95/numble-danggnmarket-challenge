@@ -26,14 +26,14 @@ public class CommentController {
     public String getComments(@RequestParam("productId") Long productId,
                               Model model) {
         model.addAttribute("comments", commentUseCase.getProductComments(productId));
-        return "/comment/comments";
+        return "comment/comments";
     }
 
     @GetMapping("/add")
     public String addCommentView(@RequestParam("productId") Long productId,
                                  Model model) {
         model.addAttribute("createCommentRequest", new CreateCommentRequest(productId));
-        return "/comment/addForm";
+        return "comment/addForm";
     }
 
     @PostMapping("/add")
@@ -43,7 +43,7 @@ public class CommentController {
                              RedirectAttributes redirectAttributes,
                              @AuthUser LoginMember loginMember) {
         if (bindingResult.hasErrors()) {
-            return "/comment/addForm";
+            return "comment/addForm";
         }
 
         commentUseCase.save(
@@ -58,7 +58,7 @@ public class CommentController {
         UpdateCommentRequest updateCommentRequest = CommentPresentationAssembler.toUpdateCommentRequest(
                 commentUseCase.getComment(commentId));
         model.addAttribute("updateCommentRequest", updateCommentRequest);
-        return "/comment/editForm";
+        return "comment/editForm";
     }
 
     @PostMapping("/edit")
@@ -68,7 +68,7 @@ public class CommentController {
                               RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("updateCommentRequest", updateCommentRequest);
-            return "/comment/editForm";
+            return "comment/editForm";
         }
 
         Long updatedCommentProductId = commentUseCase.update(

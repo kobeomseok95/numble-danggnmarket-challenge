@@ -59,14 +59,14 @@ public class MemberInfoController {
     @GetMapping("/login")
     public String loginView(Model model) {
         model.addAttribute("loginRequest", new LoginRequest());
-        return "/member/loginForm";
+        return "member/loginForm";
     }
 
     @GetMapping("/me")
     public String myPageMain(Model model,
                              @AuthUser LoginMember loginMember) {
         model.addAttribute("me", presentationAssembler.toMyPageMainResponse(loginMember.getMember()));
-        return "/member/myPage";
+        return "member/myPage";
     }
 
     @GetMapping("/edit")
@@ -75,7 +75,7 @@ public class MemberInfoController {
         UpdateMemberInfoRequest request = presentationAssembler.toUpdateMemberInfoRequest(
                 memberUseCase.findMemberInfoByMemberId(loginMember.getMemberId()));
         model.addAttribute("updateMemberInfoRequest", request);
-        return "/member/editForm";
+        return "member/editForm";
     }
 
     @PostMapping("/edit")

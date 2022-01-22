@@ -34,13 +34,13 @@ public class ProductController {
                                @AuthUser LoginMember loginMember) {
         model.addAttribute("products", productQueryUseCase.findProducts(pageable));
         model.addAttribute("likeProductIds", productQueryUseCase.getLikeProductIds(loginMember));
-        return "/product/products";
+        return "product/products";
     }
 
     @GetMapping("/{productId}")
     public String product(@PathVariable("productId") Long productId, Model model) {
         model.addAttribute("product", productQueryUseCase.findProductDetail(productId));
-        return "/product/product";
+        return "product/product";
     }
 
     @GetMapping("/member/{memberId}")
@@ -52,7 +52,7 @@ public class ProductController {
                 status.name(),
                 pageable));
         model.addAttribute("memberId", memberId);
-        return "/product/memberProducts";
+        return "product/memberProducts";
     }
 
     @GetMapping("/add")
@@ -70,7 +70,7 @@ public class ProductController {
                              @AuthUser LoginMember loginMember) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("productCategory", productCategoryProvider.getProductCategoryEnums());
-            return "/product/addForm";
+            return "product/addForm";
         }
 
         Long productId = productCommandUseCase.save(
@@ -103,7 +103,7 @@ public class ProductController {
                                   Model model) {
         model.addAttribute("updateProductInfoRequest", getUpdateProductInfoRequest(productId));
         model.addAttribute("productCategory", productCategoryProvider.getProductCategoryEnums());
-        return "/product/editForm";
+        return "product/editForm";
     }
 
     private UpdateProductInfoRequest getUpdateProductInfoRequest(Long productId) {
@@ -119,7 +119,7 @@ public class ProductController {
                               RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("productCategory", productCategoryProvider.getProductCategoryEnums());
-            return "/product/editForm";
+            return "product/editForm";
         }
         productCommandUseCase.updateProductInfo(ProductPresentationAssembler.toUpdateProductInfoRequestVo(productId,
                 updateProductInfoRequest));

@@ -144,7 +144,7 @@ class MemberInfoControllerIntegrationTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(MemberInfoController.class))
                 .andExpect(handler().methodName("loginView"))
-                .andExpect(view().name("/member/loginForm"))
+                .andExpect(view().name("member/loginForm"))
                 .andExpect(model().attributeExists("loginRequest"));
     }
 

@@ -66,3 +66,5 @@ spring:
   h2:
     console:
       enabled: false
+  thymeleaf:
+    prefix: classpath:/templates/
