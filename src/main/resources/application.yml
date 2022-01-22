@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    default: dev
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -7,12 +9,12 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-      database-platform: org.hibernate.dialect.H2Dialect
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   h2:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -38,3 +40,28 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
+
+---
+server:
+  port: 8081
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ENC(h7fzXS+olTtHrrRSlrvM/FInlo+9sXaRfxVvY5q9OS1uCqTw6NQpEFqvDuCLFqtAukKiMkSZp7/L5gloUZJezOZ97XbT9ClMFHfv2mnRiGLmWXylRsB1o5wC7IhEohjwEfZggYAeSWQ=)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(EtYPV83KhfOyXb7SdMEGbw==)
+    password: ENC(Nhc6LlFYfE2ye+JfZHAV20+EC3WIp9Go)
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  h2:
+    console:
+      enabled: false
