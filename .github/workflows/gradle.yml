@@ -37,7 +37,5 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws s3 cp \
-        --debug \
         --region ap-northeast-2 \
-        --sse aws:kms \
-        ./app.zip s3://build/
+        ./app.zip s3://danggnmarket-challenge-bucket/build/
