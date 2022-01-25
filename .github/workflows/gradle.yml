@@ -50,5 +50,5 @@ jobs:
         --application-name danggnmarket-challenge \
         --deployment-group-name danggnmarket-challenge-deploy \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=danggnmarket-challenge-bucket/build/,bundleType=zip,key=app.zip \
+        --s3-location bucket=danggnmarket-challenge-bucket,bundleType=zip,key=build/app.zip \
         --region ap-northeast-2
