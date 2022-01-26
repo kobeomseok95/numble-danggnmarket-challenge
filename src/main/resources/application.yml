@@ -43,13 +43,10 @@ jasypt:
       suffix: )
 
 ---
-server:
-  port: 8081
-
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: prod1
   datasource:
     url: ENC(rff/3AqNQg7Nl3j3lAgwjlt+P2BSATog3b5KoWmLTArRqhxVB6Us1JPHMbxqAhzCBrxQGflQBAKEyzbnDQ5cckmqCBg8hcltIU/f2KhPJR4qw6PNlwgI+O2lzHOsqdVnRwv16h+fTAl+/WGTEgyKJ2fgs+frWmH0V3mF2fVtRuMFThqm9qEn7v4cvtNIa+Ej)
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -66,3 +63,29 @@ spring:
   h2:
     console:
       enabled: false
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod2
+  datasource:
+    url: ENC(rff/3AqNQg7Nl3j3lAgwjlt+P2BSATog3b5KoWmLTArRqhxVB6Us1JPHMbxqAhzCBrxQGflQBAKEyzbnDQ5cckmqCBg8hcltIU/f2KhPJR4qw6PNlwgI+O2lzHOsqdVnRwv16h+fTAl+/WGTEgyKJ2fgs+frWmH0V3mF2fVtRuMFThqm9qEn7v4cvtNIa+Ej)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(EtYPV83KhfOyXb7SdMEGbw==)
+    password: ENC(Nhc6LlFYfE2ye+JfZHAV20+EC3WIp9Go)
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  h2:
+    console:
+      enabled: false
+server:
+  port: 8082

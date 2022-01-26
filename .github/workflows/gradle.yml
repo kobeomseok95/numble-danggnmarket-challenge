@@ -31,6 +31,8 @@ jobs:
       run: cp ./build/libs/*.jar ./deploy/
     - name: Copy appspec
       run: cp appspec.yml ./deploy/
+    - name: Copy shell
+      run: cp ./scripts/* ./deploy/
     - name: Make Zip File
       run: zip -r -qq -j ./app.zip ./deploy
     - name: Deliver to AWS S3
