@@ -20,9 +20,10 @@ public class HealthCheckController {
         List<String> realProfiles = Arrays.asList("prod1", "prod2");
         String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
 
-        return profiles.stream()
+        String profile = profiles.stream()
                 .filter(realProfiles::contains)
                 .findAny()
                 .orElse(defaultProfile);
+        return profile + " is Running...";
     }
 }
