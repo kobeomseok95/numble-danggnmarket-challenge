@@ -14,6 +14,9 @@ REPOSITORY=/home/ec2-user/app
 #
 #cp $REPOSITORY/deloy/*.jar $REPOSITORY/
 
+echo "> 현재 위치"
+pwd
+
 echo "> 새 어플리케이션 배포"
 JAR_NAME=$(ls -tr *.jar | tail -n 1)
 
