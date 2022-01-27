@@ -31,4 +31,3 @@ IDLE_PORT=$(find_idle_port)
 echo "> docker build and run jar name = $JAR_NAME , profile = $IDLE_PROFILE "
 docker build -t --name danggn .
 docker run --env PROFILE=$IDLE_PROFILE -dit -p $IDLE_PORT:$IDLE_PORT --name $IDLE_PROFILE danggn
-
