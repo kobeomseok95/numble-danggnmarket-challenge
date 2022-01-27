@@ -8,7 +8,6 @@ ABSDIR=$(dirname $ABSPATH)
 source ${ABSDIR}/profile.sh
 
 REPOSITORY=/home/ec2-user/app
-PROJECT_NAME=springboot-intro
 
 #echo "> Build 파일 복사"
 #echo "> cp $REPOSITORY/deploy/*.jar $REPOSITORY/"
@@ -33,7 +32,3 @@ echo "> docker build and run jar name = $JAR_NAME , profile = $IDLE_PROFILE "
 docker build -t --name danggn .
 docker run --env PROFILE=$IDLE_PROFILE -dit -p $IDLE_PORT:$IDLE_PORT --name $IDLE_PROFILE danggn
 
-#nohup java -jar \
-#    -Dspring.config.location=classpath:/application.properties,classpath:/application-$IDLE_PROFILE.properties,/home/ec2-user/app/application-oauth.properties,/home/ec2-user/app/application-real-db.properties \
-#    -Dspring.profiles.active=$IDLE_PROFILE \
-#    $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
