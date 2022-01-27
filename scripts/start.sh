@@ -14,7 +14,8 @@ REPOSITORY=/home/ec2-user/app
 #
 #cp $REPOSITORY/deloy/*.jar $REPOSITORY/
 
-echo "> 현재 위치"
+echo "> 위치 이동"
+cd /home/ec2-user/app
 pwd
 
 echo "> 새 어플리케이션 배포"
