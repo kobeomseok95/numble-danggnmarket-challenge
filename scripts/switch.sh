@@ -22,5 +22,5 @@ function switch_proxy() {
     echo "> 엔진엑스 Reload"
 
 #    docker restart nginx
-    docker-compose -f /home/ec2-user/app/nginx/docker-compose-nginx.yml up -d
+    docker-compose -f /home/ec2-user/app/nginx/docker-compose-nginx.yml up --build -d
 }
