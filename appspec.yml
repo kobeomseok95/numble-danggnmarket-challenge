@@ -21,3 +21,7 @@ hooks:
     - location: health.sh
       timeout: 60
       runas: ec2-user
+  AfterAllowTraffic:
+    - location: clear.sh
+      time: 60
+      runas: ec2-user

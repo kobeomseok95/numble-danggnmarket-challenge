@@ -20,7 +20,5 @@ function switch_proxy() {
     echo "set \$service_url http://${SERVICE_IP}:${IDLE_PORT};" | sudo tee /home/ec2-user/app/nginx/service-url.inc
 
     echo "> 엔진엑스 Reload"
-
-#    docker restart nginx
     docker-compose -f /home/ec2-user/app/nginx/docker-compose-nginx.yml up --build -d
 }

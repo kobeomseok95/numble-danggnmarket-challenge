@@ -11,13 +11,12 @@ source ${ABSDIR}/switch.sh
 IDLE_PORT=$(find_idle_port)
 
 echo "> Health Check Start!"
-echo "> IDLE_PORT: $IDLE_PORT"
-echo "> curl -s http://danggn:$IDLE_PORT/health"
+echo "> curl -k -s https://danggn/health"
 sleep 10
 
 for RETRY_COUNT in {1..10}
 do
-  RESPONSE=$(curl -s http://danggn:${IDLE_PORT}/health)
+  RESPONSE=$(curl -k -s https://danggn/health)
   UP_COUNT=$(echo ${RESPONSE} | grep 'prod' | wc -l)
 
   if [ ${UP_COUNT} -ge 1 ]
