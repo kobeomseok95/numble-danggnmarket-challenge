@@ -3,13 +3,13 @@
 function find_idle_profile()
 {
     # curl 결과로 연결할 서비스 결정
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://danggn/health)
+    HTTP_CODE=$(curl -k -s -o /dev/null -w "%{http_code}" https://danggn/health)
 
     if [ ${HTTP_CODE} -ge 400 ] || [ ${HTTP_CODE} -eq 000 ] # 400 보다 크면 (즉, 40x/50x 에러 모두 포함)
     then
         CURRENT_PROFILE=prod1
     else
-        CURRENT_PROFILE=$(curl -s http://danggn/health)
+        CURRENT_PROFILE=$(curl -k -s https://danggn/health)
     fi
 
     # IDLE_PROFILE : nginx와 연결되지 않은 profile
