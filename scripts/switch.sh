@@ -20,6 +20,7 @@ function switch_proxy() {
     echo "set \$service_url http://${SERVICE_IP}:${IDLE_PORT};" | sudo tee /home/ec2-user/app/nginx/service-url.inc
 
     echo "> 엔진엑스 Reload"
-    # nignx reload. restart와는 다르게 설정 값만 불러옴
-    docker restart nginx
+
+#    docker restart nginx
+    docker-compose -f /home/ec2-user/app/nginx/docker-compose-nginx.yml up -d
 }
