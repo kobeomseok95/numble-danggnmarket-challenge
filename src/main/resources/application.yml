@@ -41,9 +41,7 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
-server:
-  tomcat:
-    use-relative-redirects: true
+
 ---
 spring:
   config:
