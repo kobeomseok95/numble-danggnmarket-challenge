@@ -41,7 +41,8 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
-
+server:
+  port: 5000
 ---
 spring:
   config:
