@@ -1,6 +1,6 @@
 FROM adoptopenjdk:11-jdk-hotspot
 
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=/build/libs/*.jar
 ARG JASPYT_PASSWORD=""
 
 COPY ${JAR_FILE} app.jar

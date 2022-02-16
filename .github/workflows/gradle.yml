@@ -56,10 +56,6 @@ jobs:
         cp -r .ebextensions deploy/.ebextensions
         cp Dockerrun.aws.json deploy/Dockerrun.aws.json
         cd deploy && zip -r deploy.zip .
-#    - name: Copy appspec
-#      run: cp appspec.yml ./deploy/
-#    - name: Copy shell
-#      run: cp ./scripts/* ./deploy/
     - name: Deploy to Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v20
       with:
