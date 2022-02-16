@@ -37,6 +37,7 @@ jobs:
         cp ./build/libs/*.jar ./deploy/
         cp Procfile ./deploy/
         cp -r .ebextensions ./deploy/
+        cp -r .platform ./deploy/
         zip -r -qq -j ./app.zip ./deploy
 #    - name: Copy appspec
 #      run: cp appspec.yml ./deploy/
