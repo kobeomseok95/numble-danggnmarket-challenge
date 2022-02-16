@@ -36,11 +36,13 @@ jobs:
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy/
     - name: Copy .ebextensions
-      run: cp .ebextensions ./deploy/
-    - name: Copy appspec
-      run: cp appspec.yml ./deploy/
-    - name: Copy shell
-      run: cp ./scripts/* ./deploy/
+      run: cp -r .ebextensions ./deploy/
+    - name: Copy Procfile
+      run: cp Procfile ./deploy/
+#    - name: Copy appspec
+#      run: cp appspec.yml ./deploy/
+#    - name: Copy shell
+#      run: cp ./scripts/* ./deploy/
     - name: Make Zip File
       run: zip -r -qq -j ./app.zip ./deploy
     - name: Deploy to Elastic Beanstalk
