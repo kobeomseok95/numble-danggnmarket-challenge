@@ -53,7 +53,7 @@ jobs:
         application_name: danggnmarket
         environment_name: danggnmarket-dev-env
         version_label: Github Action-${{steps.current-time.outputs.formattedTime}}
-        region: ap-northeast-2
+        region: ap-northeast-2a
         deployment_package: app.zip
         wait_for_environment_recovery: 180
 
