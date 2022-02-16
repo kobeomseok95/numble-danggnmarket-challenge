@@ -34,9 +34,9 @@ jobs:
     - name: Generate deployment package
       run: |
         mkdir -p deploy
-        cp ./build/libs/*.jar ./deploy/app.jar
-        cp Procfile ./deploy/Procfile
-        cp -r .ebextensions ./deploy/.ebextensions
+        cp ./build/libs/*.jar ./deploy/
+        cp Procfile ./deploy/
+        cp -r .ebextensions ./deploy/
         zip -r -qq -j ./app.zip ./deploy
 #    - name: Copy appspec
 #      run: cp appspec.yml ./deploy/
