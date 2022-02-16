@@ -5,8 +5,8 @@ ARG JASPYT_PASSWORD=""
 
 COPY ${JAR_FILE} app.jar
 
-EXPOSE 5000
+EXPOSE 8080
 
 ENV JASPYT_PASSWORD=$JASPYT_PASSWORD
 
-ENTRYPOINT ["java", "-jar", "-Djasypt.encryptor.password=${JASPYT_PASSWORD}", "-Dspring.profiles.active=ebprod","/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Djasypt.encryptor.password=${JASPYT_PASSWORD}", "-Dspring.profiles.active=dev","/app.jar"]
