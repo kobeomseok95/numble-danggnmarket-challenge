@@ -34,6 +34,10 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+    - name: check pwd
+      run: pwd
+    - name: check ls
+      run: ls
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
@@ -64,7 +68,7 @@ jobs:
         application_name: danggnmarket
         environment_name: dev-docker-danggnmarket
         version_label: danggn-docker-${{steps.current-time.outputs.formattedTime}}
-        region: ap-northeast-2
+        region: ${{ secrets.AWS_REGION }}
         deployment_package: deploy/deploy.zip
         wait_for_environment_recovery: 180
 
